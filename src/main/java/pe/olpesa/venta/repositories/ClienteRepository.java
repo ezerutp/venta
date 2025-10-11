@@ -10,6 +10,7 @@ import pe.olpesa.venta.utils.EnumDocumento;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+    public Cliente findByNumeroDocumento(String numeroDocumento);
     public Cliente findByTipoDocumentoAndNumeroDocumento(EnumDocumento tipoDocumento, String numeroDocumento);
     public List<Cliente> findByNombreRazonContainingIgnoreCase(String nombreRazon);
 }

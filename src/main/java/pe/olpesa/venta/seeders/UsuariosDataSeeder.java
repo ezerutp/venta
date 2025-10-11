@@ -35,7 +35,7 @@ public class UsuariosDataSeeder implements CommandLineRunner {
             user1.setEstado(true);
             usuarioRepository.save(user1);
         }
-        Usuario user2 = usuarioRepository.findByUsername("123456");
+        Usuario user2 = usuarioRepository.findByUsername("jdoe");
         if (user2 == null) {
             user2 = new Usuario();
             user2.setNombre("John");
