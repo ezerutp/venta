@@ -29,6 +29,7 @@ public class ClientesDataSeeders implements CommandLineRunner{
             cliente1.setDireccion("Av. Siempre Viva 123");
             cliente1.setTelefono("987654321");
             cliente1.setEmail("juan.perez@example.com");
+            cliente1.setEstado(true);
             clienteRepository.save(cliente1);
         }
         Cliente cliente2 = clienteRepository.findByNumeroDocumento("987654321");
@@ -40,6 +41,7 @@ public class ClientesDataSeeders implements CommandLineRunner{
             cliente2.setDireccion("Calle Falsa 456");
             cliente2.setTelefono("912345678");
             cliente2.setEmail("maria.lopez@example.com");
+            cliente2.setEstado(false);
             clienteRepository.save(cliente2);
         }
 
@@ -52,6 +54,7 @@ public class ClientesDataSeeders implements CommandLineRunner{
             cliente3.setDireccion("Jr. Los Olivos 789");
             cliente3.setTelefono("934567890");
             cliente3.setEmail("carlos.ruiz@example.com");
+            cliente3.setEstado(true);
             clienteRepository.save(cliente3);
         }
 
@@ -64,6 +67,7 @@ public class ClientesDataSeeders implements CommandLineRunner{
             cliente4.setDireccion("Av. Las Flores 321");
             cliente4.setTelefono("945678123");
             cliente4.setEmail("ana.torres@example.com");
+            cliente4.setEstado(true);
             clienteRepository.save(cliente4);
         }
 
@@ -76,6 +80,7 @@ public class ClientesDataSeeders implements CommandLineRunner{
             cliente5.setDireccion("Calle Sol 654");
             cliente5.setTelefono("956789432");
             cliente5.setEmail("luis.mendoza@example.com");
+            cliente5.setEstado(true);
             clienteRepository.save(cliente5);
         }
     }

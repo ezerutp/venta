@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout (title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">OLPESA</title>
+    <link rel="icon" href="https://www.olpesa.com/sites/all/themes/orane/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/estilo.css">
+    <link rel="stylesheet" href="/home.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'olpesa-green': '#4CAF50',
+                        'olpesa-dark-green': '#2E7D32',
+                        'olpesa-orange': '#FF9800',
+                        'olpesa-light-green': '#81C784',
+                        'olpesa-gray': '#424242',
+                        'olpesa-light-gray': '#E8E8E8'
+                    },
+                    backgroundImage: {
+                        'gradient-olpesa': 'linear-gradient(135deg, #4CAF50 0%, #81C784 25%, #FF9800 75%, #FFA726 100%)',
+                        'gradient-card': 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen relative overflow-hidden">
+    <!-- Fondo animado -->
+    <div th:replace="~{fragments/background :: background}"></div>
+
+    <!-- Layout principal -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div th:replace="~{fragments/header :: header}"></div>
+
+            <!-- Contenido dinámico -->
+            <main th:replace="${content}">
+                <!-- El contenido específico de cada página se insertará aquí -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts comunes -->
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

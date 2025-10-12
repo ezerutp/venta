@@ -39,6 +39,20 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    // Clientes activos
+    public int contarClientesActivos() {
+        return (int) listarClientes().stream()
+                .filter(cliente -> cliente.isEstado())
+                .count();
+    }
+
+    // Clientes inactivos
+    public int contarClientesInactivos() {
+        return (int) listarClientes().stream()
+                .filter(cliente -> cliente.isEstado() == false)
+                .count();
+    }
+
     // Eliminar cliente por ID
     public void eliminarCliente(Long id) {
         clienteRepository.deleteById(id);

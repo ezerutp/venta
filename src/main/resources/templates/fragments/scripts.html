@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Scripts comunes -->
+<div th:fragment="common-scripts">
+    <script>
+        // Animaciones GSAP
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline principal
+            const tl = gsap.timeline();
+            
+            // Animación de entrada del sidebar
+            tl.fromTo('.sidebar-animate', 
+                { x: -250, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+            );
+            
+            // Animación del logo
+            tl.fromTo('.logo-animate', 
+                { scale: 0, rotation: -180 },
+                { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.7)" }, 
+                "-=0.4"
+            );
+            
+            // Animación de las tarjetas de estadísticas
+            tl.fromTo('.stat-card', 
+                { y: 50, opacity: 0, scale: 0.9 },
+                { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.1, ease: "back.out(1.7)" }, 
+                "-=0.2"
+            );
+            
+            // Animaciones de las formas flotantes
+            gsap.to('.shape-1', {
+                y: 30,
+                x: 20,
+                rotation: 360,
+                duration: 15,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            gsap.to('.shape-2', {
+                y: -25,
+                x: -25,
+                rotation: -360,
+                duration: 18,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            gsap.to('.shape-3', {
+                y: 35,
+                x: 30,
+                rotation: 360,
+                duration: 20,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            // Contador animado
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target').replace(/,/g, ''));
+                gsap.to(counter, {
+                    innerHTML: target,
+                    duration: 2,
+                    ease: "power2.out",
+                    snap: { innerHTML: 1 },
+                    onUpdate: function() {
+                        counter.innerHTML = Math.ceil(counter.innerHTML).toLocaleString();
+                    }
+                });
+            });
+        });
+        
+        // Actualizar fecha y hora
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            
+            const dateElement = document.getElementById('current-date');
+            const timeElement = document.getElementById('current-time');
+            
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('es-ES', dateOptions);
+            }
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleTimeString('es-ES', timeOptions);
+            }
+        }
+        
+        // Actualizar cada segundo
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        // Navegación activa
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Solo prevenir el comportamiento por defecto si es un enlace con #
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                }
+                
+                // Animación de clic
+                gsap.to(this, {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power2.inOut"
+                });
+            });
+        });
+    </script>
+</div>
+
+</html>

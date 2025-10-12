@@ -30,5 +30,24 @@ public class UsuarioDetalle implements UserDetails {
     public String getUsername() {
         return usuario.getUsername();
     }
-    
+
+    public String getIniciales() {
+        return new StringBuilder()
+                .append(usuario.getNombre().charAt(0))
+                .append(usuario.getApellido().charAt(0))
+                .toString().toUpperCase();
+    }
+
+    public String getName() {
+        return new StringBuilder()
+                .append(usuario.getNombre())
+                .append(" ")
+                .append(usuario.getApellido())
+                .toString();
+    }
+
+    public String getEmail() {
+        return usuario.getEmail();
+    }
+
 }

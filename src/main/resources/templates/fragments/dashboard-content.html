@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Contenido del Dashboard -->
+<div th:fragment="dashboard-content" class="flex-1 overflow-auto p-8 m-4">
+    <!-- Tarjetas de estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Clientes -->
+        <div class="stat-card card-hover rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-olpesa-gray/60 text-sm font-medium">Total Clientes</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="1,247">0</p>
+                    <p class="text-olpesa-green text-xs mt-1">+12% este mes</p>
+                </div>
+                <div class="p-3 bg-olpesa-green/10 rounded-xl">
+                    <svg class="w-8 h-8 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="stat-card card-hover rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-olpesa-gray/60 text-sm font-medium">Productos</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="89">0</p>
+                    <p class="text-olpesa-orange text-xs mt-1">+5 nuevos</p>
+                </div>
+                <div class="p-3 bg-olpesa-orange/10 rounded-xl">
+                    <svg class="w-8 h-8 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ventas del día -->
+        <div class="stat-card card-hover rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-olpesa-gray/60 text-sm font-medium">Ventas Hoy</p>
+                    <p class="text-3xl font-bold text-olpesa-gray">S/ <span class="counter" data-target="24,580">0</span></p>
+                    <p class="text-olpesa-green text-xs mt-1">+8% vs ayer</p>
+                </div>
+                <div class="p-3 bg-olpesa-light-green/10 rounded-xl">
+                    <svg class="w-8 h-8 text-olpesa-light-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuarios activos -->
+        <div class="stat-card card-hover rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-olpesa-gray/60 text-sm font-medium">Usuarios Activos</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="18">0</p>
+                    <p class="text-olpesa-green text-xs mt-1">Online ahora</p>
+                </div>
+                <div class="p-3 bg-olpesa-green/10 rounded-xl">
+                    <svg class="w-8 h-8 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos y acciones rápidas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Gráfico de ventas -->
+        <div class="lg:col-span-2 stat-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-olpesa-gray">Ventas Mensuales</h3>
+                <select class="bg-white/50 border border-gray-200 rounded-lg px-3 py-1 text-sm">
+                    <option>Últimos 6 meses</option>
+                    <option>Este año</option>
+                </select>
+            </div>
+            <div class="h-64">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="stat-card rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-olpesa-gray mb-6">Acciones Rápidas</h3>
+            <div class="space-y-4">
+                <a href="/clientes/nuevo" class="w-full p-4 bg-olpesa-green text-white rounded-xl hover:bg-olpesa-dark-green transition-all duration-300 flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span>Nuevo Cliente</span>
+                </a>
+                
+                <a href="/productos/nuevo" class="w-full p-4 bg-olpesa-orange text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Agregar Producto</span>
+                </a>
+                
+                <a href="/ventas/nuevo" class="w-full p-4 bg-olpesa-light-green text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 3H5a2 2 0 00-2 2v1m0 0h18M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17a2 2 0 002-2v-4a2 2 0 00-2-2H9.414"></path>
+                    </svg>
+                    <span>Nueva Venta</span>
+                </a>
+                
+                <a href="/reportes" class="w-full p-4 bg-olpesa-gray text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Generar Reporte</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de transacciones recientes -->
+    <div class="mt-8 stat-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-olpesa-gray">Transacciones Recientes</h3>
+            <a href="/ventas" class="text-olpesa-green hover:text-olpesa-dark-green text-sm font-medium">Ver todas</a>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-gray-200">
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">ID</th>
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">Cliente</th>
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">Producto</th>
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">Monto</th>
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">Estado</th>
+                        <th class="text-left py-3 text-olpesa-gray/60 font-medium">Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
+                        <td class="py-3 text-olpesa-gray">#001</td>
+                        <td class="py-3 text-olpesa-gray">Juan Pérez</td>
+                        <td class="py-3 text-olpesa-gray">Aceite de Palma</td>
+                        <td class="py-3 text-olpesa-gray">S/ 1,250</td>
+                        <td class="py-3">
+                            <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Completado</span>
+                        </td>
+                        <td class="py-3 text-olpesa-gray/60">Hoy, 10:30 AM</td>
+                    </tr>
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
+                        <td class="py-3 text-olpesa-gray">#002</td>
+                        <td class="py-3 text-olpesa-gray">María García</td>
+                        <td class="py-3 text-olpesa-gray">Palmiste</td>
+                        <td class="py-3 text-olpesa-gray">S/ 850</td>
+                        <td class="py-3">
+                            <span class="px-2 py-1 bg-olpesa-orange/10 text-olpesa-orange rounded-full text-xs">Pendiente</span>
+                        </td>
+                        <td class="py-3 text-olpesa-gray/60">Hoy, 09:15 AM</td>
+                    </tr>
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
+                        <td class="py-3 text-olpesa-gray">#003</td>
+                        <td class="py-3 text-olpesa-gray">Carlos Ruiz</td>
+                        <td class="py-3 text-olpesa-gray">Aceite Crudo</td>
+                        <td class="py-3 text-olpesa-gray">S/ 2,100</td>
+                        <td class="py-3">
+                            <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Completado</span>
+                        </td>
+                        <td class="py-3 text-olpesa-gray/60">Ayer, 04:45 PM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script específico del dashboard -->
+    <script>
+        // Gráfico de ventas con Chart.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('salesChart');
+            if (ctx) {
+                const salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Ventas (S/)',
+                            data: [45000, 52000, 48000, 61000, 58000, 67000],
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#4CAF50',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(66, 66, 66, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#666',
+                                    callback: function(value) {
+                                        return 'S/ ' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(66, 66, 66, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#666'
+                                }
+                            }
+                        },
+                        elements: {
+                            point: {
+                                hoverRadius: 8
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</div>
+
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{fragments/base :: layout('OLPESA - Gestión de Clientes', ~{::main})}">
+
+<!-- Variables para el header -->
+<th:block th:with="pageTitle='Clientes', pageSubtitle='Gestión de clientes y contactos'"></th:block>
+
+<!-- Contenido específico de Clientes -->
+<main>
+    <div class="flex-1 overflow-auto p-8 m-4">
+        <!-- Botones de acción -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex space-x-4">
+                <button
+                    class="bg-olpesa-green text-white px-4 py-2 rounded-lg hover:bg-olpesa-dark-green transition-colors">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Nuevo Cliente
+                </button>
+                <button class="bg-olpesa-orange text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Importar
+                </button>
+            </div>
+
+            <div class="flex space-x-2">
+                <input type="text" placeholder="Buscar clientes..."
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de estadísticas de clientes -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Total Clientes</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${totalClientes ?: '1,247'}">1,247</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-green/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Activos</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesActivos ?: '1,189'}">1,189</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-light-green/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-light-green" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Nuevos (mes)</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesNuevosMes ?: '47'}">47</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-orange/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Inactivos</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesInactivos ?: '58'}">58</p>
+                    </div>
+                    <div class="p-3 bg-red-100 rounded-xl">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de clientes -->
+        <div class="stat-card rounded-xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-olpesa-gray">Lista de Clientes</h3>
+                <div class="flex space-x-2">
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option>Todos los estados</option>
+                        <option>Activos</option>
+                        <option>Inactivos</option>
+                    </select>
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option>Ordenar por</option>
+                        <option>Nombre</option>
+                        <option>Fecha registro</option>
+                        <option>Última compra</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 text-gray-600 font-medium">
+                                <input type="checkbox" class="rounded">
+                            </th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Cliente</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Tipo Documento</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Documento</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Email</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Teléfono</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Estado</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cliente : ${clientes}" class="border-b border-gray-100 hover:bg-gray-50/50">
+                            <td class="py-3">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="py-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm font-semibold"
+                                            th:text="${#strings.substring(cliente.nombreRazon, 0, 1)}">J</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-olpesa-gray font-medium" th:text="${cliente.nombreRazon}">Juan
+                                            Pérez García</p>
+                                        <p class="text-gray-500 text-xs"
+                                            th:text="'Reg: ' + ${#temporals.format(cliente.createdAt, 'dd/MM/yyyy')}">
+                                            Reg: 15/01/2024</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray" th:text="${cliente.tipoDocumento}">DNI</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${cliente.numeroDocumento}">12345678</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${cliente.email}">juan.perez@email.com</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${cliente.telefono}">+51 987 654 321</td>
+                            <td class="py-3">
+                                <span
+                                    class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex space-x-2">
+                                    <button th:onclick="'editarCliente(' + ${cliente.id} + ')'"
+                                        class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button th:onclick="'verCliente(' + ${cliente.id} + ')'"
+                                        class="text-olpesa-orange hover:opacity-80" title="Ver detalles">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button th:onclick="'eliminarCliente(' + ${cliente.id} + ')'"
+                                        class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Ejemplo estático si no hay datos -->
+                        <tr th:if="${#lists.isEmpty(clientes)}" class="border-b border-gray-100">
+                            <td class="py-3"><input type="checkbox" class="rounded"></td>
+                            <td class="py-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm font-semibold">J</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-olpesa-gray font-medium">Juan Pérez García</p>
+                                        <p class="text-gray-500 text-xs">Reg: 15/01/2024</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray">DNI</td>
+                            <td class="py-3 text-olpesa-gray">12345678</td>
+                            <td class="py-3 text-olpesa-gray">juan.perez@email.com</td>
+                            <td class="py-3 text-olpesa-gray">+51 987 654 321</td>
+                            <td class="py-3">
+                                <span
+                                    class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex space-x-2">
+                                    <button class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button class="text-olpesa-orange hover:opacity-80" title="Ver detalles">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="flex items-center justify-between mt-6">
+                <div class="text-sm text-gray-500">
+                    Mostrando <span th:text="${(currentPage - 1) * pageSize + 1}">1</span> a
+                    <span th:text="${currentPage * pageSize}">10</span> de
+                    <span th:text="${totalElements}">1,247</span> resultados
+                </div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50"
+                        th:disabled="${currentPage == 1}">Anterior</button>
+                    <button th:each="page : ${#numbers.sequence(1, totalPages)}" th:text="${page}"
+                        th:class="${page == currentPage} ? 'px-3 py-1 bg-olpesa-green text-white rounded' : 'px-3 py-1 border border-gray-300 rounded hover:bg-gray-50'"
+                        th:onclick="'goToPage(' + ${page} + ')'">1</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50"
+                        th:disabled="${currentPage == totalPages}">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts específicos de clientes -->
+    <script>
+        function editarCliente(id) {
+            // Lógica para editar cliente
+            window.location.href = '/clientes/editar/' + id;
+        }
+
+        function verCliente(id) {
+            // Lógica para ver detalles del cliente
+            window.location.href = '/clientes/ver/' + id;
+        }
+
+        function eliminarCliente(id) {
+            if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
+                // Lógica para eliminar cliente
+                fetch('/clientes/eliminar/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+
+        function goToPage(page) {
+            // Lógica para ir a una página específica
+            window.location.href = '/clientes?page=' + page;
+        }
+    </script>
+</main>
+
+</html>
