@@ -53,8 +53,21 @@ public class ClienteService {
                 .count();
     }
 
-    // Eliminar cliente por ID
+    // Eliminar (desactivar) cliente por ID
     public void eliminarCliente(Long id) {
-        clienteRepository.deleteById(id);
+        Cliente cliente = obtenerClientePorId(id);
+        if (cliente != null) {
+            cliente.setEstado(false); // Desactivar el cliente en lugar de eliminarlo
+            clienteRepository.save(cliente);
+        }
+    }
+
+    // Activar cliente por ID
+    public void activarCliente(Long id) {
+        Cliente cliente = obtenerClientePorId(id);
+        if (cliente != null) {
+            cliente.setEstado(true); // Activar el cliente
+            clienteRepository.save(cliente);
+        }
     }
 }

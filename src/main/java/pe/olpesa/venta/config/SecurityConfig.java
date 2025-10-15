@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
+            )
             .userDetailsService(usuarioAuthService);
         
         return http.build();

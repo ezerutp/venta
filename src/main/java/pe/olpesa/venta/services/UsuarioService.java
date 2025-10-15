@@ -57,7 +57,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // Eliminar usuario por ID
+    // Eliminar (desactivar) usuario por ID
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
@@ -70,5 +70,19 @@ public class UsuarioService {
             return usuarioRepository.save(usuario);
         }
         return null;
+    }
+
+    // Contar usuarios activos
+    public int contarUsuariosActivos() {
+        return (int) listarUsuarios().stream()
+                .filter(usuario -> usuario.isEstado())
+                .count();
+    }
+
+    // Contar usuarios inactivos
+    public int contarUsuariosInactivos() {
+        return (int) listarUsuarios().stream()
+                .filter(usuario -> usuario.isEstado() == false)
+                .count();
     }
 }

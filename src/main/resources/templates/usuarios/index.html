@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
-    th:replace="~{fragments/base :: layout('OLPESA - Gestión de Clientes', ~{::main})}">
+    th:replace="~{fragments/base :: layout('OLPESA - Gestión de Usuarios', ~{::main})}">
 
 <!-- Variables para el header -->
-<th:block th:with="pageTitle='Clientes', pageSubtitle='Gestión de clientes y contactos'"></th:block>
+<th:block th:with="pageTitle='Usuarios', pageSubtitle='Gestión de usuarios'"></th:block>
 
-<!-- Contenido específico de Clientes -->
+<!-- Contenido específico de Usuarios -->
 <main>
     <div class="flex-1 overflow-auto p-8 m-4">
         <!-- Botones de acción -->
         <div class="flex justify-between items-center mb-6">
             <div class="flex space-x-4">
-                <button onclick="crearCliente()"
+                <button onclick="crearUsuario()"
                     class="bg-olpesa-green text-white px-4 py-2 rounded-lg hover:bg-olpesa-dark-green transition-colors">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    Nuevo Cliente
+                    Nuevo Usuario
                 </button>
                 <button class="bg-olpesa-orange text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
             </div>
 
             <div class="flex space-x-2">
-                <input type="text" placeholder="Buscar clientes..."
+                <input type="text" placeholder="Buscar usuarios..."
                     class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
                 <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,13 +41,13 @@
             </div>
         </div>
 
-        <!-- Tarjetas de estadísticas de clientes -->
+        <!-- Tarjetas de estadísticas de usuarios -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="stat-card rounded-xl p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Total Clientes</p>
-                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${totalClientes ?: '1,247'}">1,247</p>
+                        <p class="text-gray-600 text-sm">Total Usuarios</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${totalUsuarios ?: '127'}">127</p>
                     </div>
                     <div class="p-3 bg-olpesa-green/10 rounded-xl">
                         <svg class="w-6 h-6 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm">Activos</p>
-                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesActivos ?: '1,189'}">1,189</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${usuariosActivos ?: '118'}">118</p>
                     </div>
                     <div class="p-3 bg-olpesa-light-green/10 rounded-xl">
                         <svg class="w-6 h-6 text-olpesa-light-green" fill="none" stroke="currentColor"
@@ -78,13 +78,13 @@
             <div class="stat-card rounded-xl p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm">Nuevos (mes)</p>
-                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesNuevosMes ?: '47'}">47</p>
+                        <p class="text-gray-600 text-sm">Administradores</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${usuariosAdmin ?: '5'}">5</p>
                     </div>
                     <div class="p-3 bg-olpesa-orange/10 rounded-xl">
                         <svg class="w-6 h-6 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
                             </path>
                         </svg>
                     </div>
@@ -95,7 +95,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm">Inactivos</p>
-                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${clientesInactivos ?: '58'}">58</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${usuariosInactivos ?: '9'}">9</p>
                     </div>
                     <div class="p-3 bg-red-100 rounded-xl">
                         <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,10 +108,10 @@
             </div>
         </div>
 
-        <!-- Tabla de clientes -->
+        <!-- Tabla de usuarios -->
         <div class="stat-card rounded-xl p-6">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-olpesa-gray">Lista de Clientes</h3>
+                <h3 class="text-xl font-bold text-olpesa-gray">Lista de Usuarios</h3>
                 <div class="flex space-x-2">
                     <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
                         <option>Todos los estados</option>
@@ -121,8 +121,9 @@
                     <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
                         <option>Ordenar por</option>
                         <option>Nombre</option>
+                        <option>Email</option>
                         <option>Fecha registro</option>
-                        <option>Última compra</option>
+                        <option>Rol</option>
                     </select>
                 </div>
             </div>
@@ -134,17 +135,17 @@
                             <th class="text-left py-3 text-gray-600 font-medium">
                                 <input type="checkbox" class="rounded">
                             </th>
-                            <th class="text-left py-3 text-gray-600 font-medium">Cliente</th>
-                            <th class="text-left py-3 text-gray-600 font-medium">Tipo Documento</th>
-                            <th class="text-left py-3 text-gray-600 font-medium">Documento</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Usuario</th>
                             <th class="text-left py-3 text-gray-600 font-medium">Email</th>
-                            <th class="text-left py-3 text-gray-600 font-medium">Teléfono</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Username</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Rol</th>
                             <th class="text-left py-3 text-gray-600 font-medium">Estado</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Fecha Registro</th>
                             <th class="text-left py-3 text-gray-600 font-medium">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="cliente : ${clientes}" class="border-b border-gray-100 hover:bg-gray-50/50">
+                        <tr th:each="usuario : ${usuarios}" class="border-b border-gray-100 hover:bg-gray-50/50">
                             <td class="py-3">
                                 <input type="checkbox" class="rounded">
                             </td>
@@ -152,28 +153,30 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
                                         <span class="text-white text-sm font-semibold"
-                                            th:text="${#strings.substring(cliente.nombreRazon, 0, 1)}">J</span>
+                                            th:text="${#strings.substring(usuario.nombre, 0, 1) + #strings.substring(usuario.apellido, 0, 1)}">JP</span>
                                     </div>
                                     <div>
-                                        <p class="text-olpesa-gray font-medium" th:text="${cliente.nombreRazon}">Juan
-                                            Pérez García</p>
+                                        <p class="text-olpesa-gray font-medium" th:text="${usuario.nombre + ' ' + usuario.apellido}">Juan Pérez García</p>
                                         <p class="text-gray-500 text-xs"
-                                            th:text="'Reg: ' + ${#temporals.format(cliente.createdAt, 'dd/MM/yyyy')}">
+                                            th:text="'Reg: ' + ${#temporals.format(usuario.createdAt, 'dd/MM/yyyy')}">
                                             Reg: 15/01/2024</p>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3 text-olpesa-gray" th:text="${cliente.tipoDocumento}">DNI</td>
-                            <td class="py-3 text-olpesa-gray" th:text="${cliente.numeroDocumento}">12345678</td>
-                            <td class="py-3 text-olpesa-gray" th:text="${cliente.email}">juan.perez@email.com</td>
-                            <td class="py-3 text-olpesa-gray" th:text="${cliente.telefono}">+51 987 654 321</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${usuario.email}">juan.perez@email.com</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${usuario.username}">jperez</td>
                             <td class="py-3">
-                                <span th:if="${cliente.estado}" class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
-                                <span th:if="${!cliente.estado}" class="px-2 py-1 bg-red-100 text-red-500 rounded-full text-xs">Inactivo</span>
+                                <span th:if="${usuario.rol.name() == 'ADMIN'}" class="px-2 py-1 bg-olpesa-orange/10 text-olpesa-orange rounded-full text-xs font-medium">Administrador</span>
+                                <span th:if="${usuario.rol.name() == 'USER'}" class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">Usuario</span>
                             </td>
                             <td class="py-3">
+                                <span th:if="${usuario.estado}" class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                                <span th:if="${!usuario.estado}" class="px-2 py-1 bg-red-100 text-red-500 rounded-full text-xs">Inactivo</span>
+                            </td>
+                            <td class="py-3 text-olpesa-gray text-sm" th:text="${#temporals.format(usuario.createdAt, 'dd/MM/yyyy HH:mm')}">15/10/2025 10:30</td>
+                            <td class="py-3">
                                 <div class="flex space-x-2">
-                                    <button th:onclick="'editarCliente(' + ${cliente.id} + ')'"
+                                    <button th:onclick="'editarUsuario(' + ${usuario.id} + ')'"
                                         class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -181,7 +184,7 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    <button th:onclick="'verCliente(' + ${cliente.id} + ')'"
+                                    <button th:onclick="'verUsuario(' + ${usuario.id} + ')'"
                                         class="text-olpesa-orange hover:opacity-80" title="Ver detalles">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -191,8 +194,8 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    <span th:if="${cliente.estado}">
-                                        <button th:onclick="'eliminarCliente(' + ${cliente.id} + ')'"
+                                    <span th:if="${usuario.estado}">
+                                        <button th:onclick="'eliminarUsuario(' + ${usuario.id} + ')'"
                                             class="text-red-500 hover:text-red-700" title="Eliminar">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -201,8 +204,8 @@
                                             </svg>
                                         </button>
                                     </span>
-                                    <span th:if="${!cliente.estado}">
-                                        <button th:onclick="'activarCliente(' + ${cliente.id} + ')'"
+                                    <span th:if="${!usuario.estado}">
+                                        <button th:onclick="'activarUsuario(' + ${usuario.id} + ')'"
                                             class="text-olpesa-green hover:text-olpesa-dark-green" title="Activar">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -215,12 +218,12 @@
                         </tr>
 
                         <!-- Ejemplo estático si no hay datos -->
-                        <tr th:if="${#lists.isEmpty(clientes)}" class="border-b border-gray-100">
+                        <tr th:if="${#lists.isEmpty(usuarios)}" class="border-b border-gray-100">
                             <td class="py-3"><input type="checkbox" class="rounded"></td>
                             <td class="py-3">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
-                                        <span class="text-white text-sm font-semibold">J</span>
+                                        <span class="text-white text-sm font-semibold">JP</span>
                                     </div>
                                     <div>
                                         <p class="text-olpesa-gray font-medium">Juan Pérez García</p>
@@ -228,14 +231,15 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3 text-olpesa-gray">DNI</td>
-                            <td class="py-3 text-olpesa-gray">12345678</td>
                             <td class="py-3 text-olpesa-gray">juan.perez@email.com</td>
-                            <td class="py-3 text-olpesa-gray">+51 987 654 321</td>
+                            <td class="py-3 text-olpesa-gray">jperez</td>
                             <td class="py-3">
-                                <span
-                                    class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">Usuario</span>
                             </td>
+                            <td class="py-3">
+                                <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                            </td>
+                            <td class="py-3 text-olpesa-gray text-sm">15/10/2025 10:30</td>
                             <td class="py-3">
                                 <div class="flex space-x-2">
                                     <button class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
@@ -273,7 +277,7 @@
                 <div class="text-sm text-gray-500">
                     Mostrando <span th:text="${(currentPage - 1) * pageSize + 1}">1</span> a
                     <span th:text="${currentPage * pageSize}">10</span> de
-                    <span th:text="${totalElements}">1,247</span> resultados
+                    <span th:text="${totalElements}">127</span> resultados
                 </div>
                 <div class="flex space-x-2">
                     <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50"
@@ -288,46 +292,29 @@
         </div>
     </div>
 
-    <!-- Scripts específicos de clientes -->
+    <!-- Scripts específicos de usuarios -->
     <script>
-        function crearCliente() {
+        function crearUsuario() {
             Swal.fire({
-                title: 'Crear Nuevo Cliente',
+                title: 'Crear Nuevo Usuario',
                 html: `
-                    <form id="crearClienteForm" class="text-left">
+                    <form id="crearUsuarioForm" class="text-left">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Documento</label>
-                                <select id="tipoDocumento" name="tipoDocumento" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" required>
-                                    <option value="">Seleccionar tipo...</option>
-                                    <option value="DNI">DNI</option>
-                                    <option value="RUC">RUC</option>
-                                    <option value="CARNET_EXTRANJERIA">Carné de Extranjería</option>
-                                </select>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       minlength="3" required>
                             </div>
                             
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Número de Documento</label>
-                                <input type="text" id="numeroDocumento" name="numeroDocumento" 
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                       pattern="[0-9]{8,11}" title="Debe tener entre 8 y 11 dígitos numéricos" required>
+                                       minlength="3" required>
                             </div>
                             
                             <div class="mb-4 md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre / Razón Social</label>
-                                <input type="text" id="nombreRazon" name="nombreRazon" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                       required>
-                            </div>
-                            
-                            <div class="mb-4 md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                                <input type="text" id="direccion" name="direccion" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                       minlength="5" required>
-                            </div>
-                            
-                            <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                                 <input type="email" id="email" name="email" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
@@ -335,17 +322,33 @@
                             </div>
                             
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" 
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                <input type="text" id="username" name="username" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                       pattern="[0-9]{9}" title="Debe tener exactamente 9 dígitos" required>
+                                       minlength="3" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                                <input type="password" id="password" name="password" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       minlength="6" required>
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Rol</label>
+                                <select id="rol" name="rol" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" required>
+                                    <option value="">Seleccionar rol...</option>
+                                    <option value="USER">Usuario</option>
+                                    <option value="ADMIN">Administrador</option>
+                                </select>
                             </div>
                         </div>
                     </form>
                 `,
                 width: '800px',
                 showCancelButton: true,
-                confirmButtonText: 'Crear Cliente',
+                confirmButtonText: 'Crear Usuario',
                 cancelButtonText: 'Cancelar',
                 confirmButtonColor: '#4CAF50',
                 cancelButtonColor: '#d33',
@@ -356,31 +359,37 @@
                     htmlContainer: 'text-left'
                 },
                 preConfirm: () => {
-                    const form = document.getElementById('crearClienteForm');
+                    const form = document.getElementById('crearUsuarioForm');
                     const formData = new FormData(form);
                     
                     // Validar campos requeridos
-                    const tipoDocumento = formData.get('tipoDocumento');
-                    const numeroDocumento = formData.get('numeroDocumento');
-                    const nombreRazon = formData.get('nombreRazon');
-                    const direccion = formData.get('direccion');
+                    const nombre = formData.get('nombre');
+                    const apellido = formData.get('apellido');
                     const email = formData.get('email');
-                    const telefono = formData.get('telefono');
+                    const username = formData.get('username');
+                    const password = formData.get('password');
+                    const rol = formData.get('rol');
                     
-                    if (!tipoDocumento || !numeroDocumento || !nombreRazon || !direccion || !email || !telefono) {
+                    if (!nombre || !apellido || !email || !username || !password || !rol) {
                         Swal.showValidationMessage('Todos los campos son requeridos');
                         return false;
                     }
                     
-                    // Validar formato de documento
-                    if (!/^[0-9]{8,11}$/.test(numeroDocumento)) {
-                        Swal.showValidationMessage('El número de documento debe tener entre 8 y 11 dígitos');
+                    // Validar longitud de nombre y apellido
+                    if (nombre.length < 3 || apellido.length < 3) {
+                        Swal.showValidationMessage('El nombre y apellido deben tener al menos 3 caracteres');
                         return false;
                     }
                     
-                    // Validar formato de teléfono
-                    if (!/^[0-9]{9}$/.test(telefono)) {
-                        Swal.showValidationMessage('El teléfono debe tener exactamente 9 dígitos');
+                    // Validar longitud de username
+                    if (username.length < 3) {
+                        Swal.showValidationMessage('El username debe tener al menos 3 caracteres');
+                        return false;
+                    }
+                    
+                    // Validar longitud de contraseña
+                    if (password.length < 6) {
+                        Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
                         return false;
                     }
                     
@@ -392,19 +401,20 @@
                     }
                     
                     return {
-                        tipoDocumento: tipoDocumento,
-                        numeroDocumento: numeroDocumento,
-                        nombreRazon: nombreRazon,
-                        direccion: direccion,
+                        nombre: nombre,
+                        apellido: apellido,
                         email: email,
-                        telefono: telefono
+                        username: username,
+                        password: password,
+                        rol: rol,
+                        estado: true
                     };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Mostrar loading
                     Swal.fire({
-                        title: 'Creando cliente...',
+                        title: 'Creando usuario...',
                         text: 'Por favor espera',
                         icon: 'info',
                         allowOutsideClick: false,
@@ -415,7 +425,7 @@
                     });
                     
                     // Enviar datos al servidor
-                    fetch('/api/clientes', {
+                    fetch('/api/usuarios', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -431,10 +441,10 @@
                             });
                         }
                     })
-                    .then(clienteCreado => {
+                    .then(usuarioCreado => {
                         Swal.fire({
                             title: '¡Éxito!',
-                            text: 'Cliente creado correctamente',
+                            text: 'Usuario creado correctamente',
                             icon: 'success',
                             confirmButtonColor: '#4CAF50',
                             customClass: {
@@ -442,14 +452,14 @@
                                 confirmButton: 'rounded-lg px-6 py-2'
                             }
                         }).then(() => {
-                            // Recargar la página para mostrar el nuevo cliente
+                            // Recargar la página para mostrar el nuevo usuario
                             location.reload();
                         });
                     })
                     .catch(error => {
                         Swal.fire({
                             title: 'Error',
-                            text: error.message || 'Ocurrió un error al crear el cliente',
+                            text: error.message || 'Ocurrió un error al crear el usuario',
                             icon: 'error',
                             confirmButtonColor: '#d33',
                             customClass: {
@@ -461,65 +471,64 @@
                 }
             });
         }
-        function editarCliente(id) {
-            // Obtener datos del cliente
-            fetch('/api/clientes/' + id)
+        function editarUsuario(id) {
+            // Obtener datos del usuario
+            fetch('/api/usuarios/' + id)
                 .then(response => response.json())
-                .then(cliente => {
+                .then(usuario => {
                     Swal.fire({
-                        title: 'Editar Cliente',
+                        title: 'Editar Usuario',
                         html: `
-                            <form id="editarClienteForm" class="text-left">
+                            <form id="editarUsuarioForm" class="text-left">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Documento</label>
-                                        <select id="tipoDocumento" name="tipoDocumento" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" required>
-                                            <option value="DNI" ${cliente.tipoDocumento === 'DNI' ? 'selected' : ''}>DNI</option>
-                                            <option value="RUC" ${cliente.tipoDocumento === 'RUC' ? 'selected' : ''}>RUC</option>
-                                            <option value="CARNET_EXTRANJERIA" ${cliente.tipoDocumento === 'CARNET_EXTRANJERIA' ? 'selected' : ''}>Carné de Extranjería</option>
-                                        </select>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                                        <input type="text" id="nombre" name="nombre" value="${usuario.nombre}" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                               minlength="3" required>
                                     </div>
                                     
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Número de Documento</label>
-                                        <input type="text" id="numeroDocumento" name="numeroDocumento" value="${cliente.numeroDocumento}" 
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+                                        <input type="text" id="apellido" name="apellido" value="${usuario.apellido}" 
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                               pattern="[0-9]{8,11}" title="Debe tener entre 8 y 11 dígitos numéricos" required>
+                                               minlength="3" required>
                                     </div>
                                     
                                     <div class="mb-4 md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre / Razón Social</label>
-                                        <input type="text" id="nombreRazon" name="nombreRazon" value="${cliente.nombreRazon}" 
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                               required>
-                                    </div>
-                                    
-                                    <div class="mb-4 md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" value="${cliente.direccion}" 
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                               minlength="5" required>
-                                    </div>
-                                    
-                                    <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                        <input type="email" id="email" name="email" value="${cliente.email}" 
+                                        <input type="email" id="email" name="email" value="${usuario.email}" 
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
                                                required>
                                     </div>
                                     
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                                        <input type="tel" id="telefono" name="telefono" value="${cliente.telefono}" 
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                        <input type="text" id="username" name="username" value="${usuario.username}" 
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
-                                               pattern="[0-9]{9}" title="Debe tener exactamente 9 dígitos" required>
+                                               minlength="3" required>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña (opcional)</label>
+                                        <input type="password" id="password" name="password" 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                               minlength="6" placeholder="Dejar vacío para mantener la actual">
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Rol</label>
+                                        <select id="rol" name="rol" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" required>
+                                            <option value="USER" ${usuario.rol === 'USER' ? 'selected' : ''}>Usuario</option>
+                                            <option value="ADMIN" ${usuario.rol === 'ADMIN' ? 'selected' : ''}>Administrador</option>
+                                        </select>
                                     </div>
                                 </div>
                             </form>
                         `,
                         width: '800px',
                         showCancelButton: true,
-                        confirmButtonText: 'Actualizar Cliente',
+                        confirmButtonText: 'Actualizar Usuario',
                         cancelButtonText: 'Cancelar',
                         confirmButtonColor: '#4CAF50',
                         cancelButtonColor: '#d33',
@@ -530,31 +539,37 @@
                             htmlContainer: 'text-left'
                         },
                         preConfirm: () => {
-                            const form = document.getElementById('editarClienteForm');
+                            const form = document.getElementById('editarUsuarioForm');
                             const formData = new FormData(form);
                             
                             // Validar campos requeridos
-                            const tipoDocumento = formData.get('tipoDocumento');
-                            const numeroDocumento = formData.get('numeroDocumento');
-                            const nombreRazon = formData.get('nombreRazon');
-                            const direccion = formData.get('direccion');
+                            const nombre = formData.get('nombre');
+                            const apellido = formData.get('apellido');
                             const email = formData.get('email');
-                            const telefono = formData.get('telefono');
+                            const username = formData.get('username');
+                            const password = formData.get('password');
+                            const rol = formData.get('rol');
                             
-                            if (!tipoDocumento || !numeroDocumento || !nombreRazon || !direccion || !email || !telefono) {
-                                Swal.showValidationMessage('Todos los campos son requeridos');
+                            if (!nombre || !apellido || !email || !username || !rol) {
+                                Swal.showValidationMessage('Todos los campos son requeridos excepto la contraseña');
                                 return false;
                             }
                             
-                            // Validar formato de documento
-                            if (!/^[0-9]{8,11}$/.test(numeroDocumento)) {
-                                Swal.showValidationMessage('El número de documento debe tener entre 8 y 11 dígitos');
+                            // Validar longitud de nombre y apellido
+                            if (nombre.length < 3 || apellido.length < 3) {
+                                Swal.showValidationMessage('El nombre y apellido deben tener al menos 3 caracteres');
                                 return false;
                             }
                             
-                            // Validar formato de teléfono
-                            if (!/^[0-9]{9}$/.test(telefono)) {
-                                Swal.showValidationMessage('El teléfono debe tener exactamente 9 dígitos');
+                            // Validar longitud de username
+                            if (username.length < 3) {
+                                Swal.showValidationMessage('El username debe tener al menos 3 caracteres');
+                                return false;
+                            }
+                            
+                            // Validar contraseña solo si se proporciona
+                            if (password && password.length < 6) {
+                                Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
                                 return false;
                             }
                             
@@ -565,14 +580,20 @@
                                 return false;
                             }
                             
-                            return {
-                                tipoDocumento: tipoDocumento,
-                                numeroDocumento: numeroDocumento,
-                                nombreRazon: nombreRazon,
-                                direccion: direccion,
+                            const data = {
+                                nombre: nombre,
+                                apellido: apellido,
                                 email: email,
-                                telefono: telefono
+                                username: username,
+                                rol: rol
                             };
+                            
+                            // Agregar contraseña solo si se proporciona
+                            if (password) {
+                                data.password = password;
+                            }
+                            
+                            return data;
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -589,7 +610,7 @@
                             });
                             
                             // Enviar datos al servidor
-                            fetch('/api/clientes/' + id, {
+                            fetch('/api/usuarios/' + id, {
                                 method: 'PUT',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -605,10 +626,10 @@
                                     });
                                 }
                             })
-                            .then(clienteActualizado => {
+                            .then(usuarioActualizado => {
                                 Swal.fire({
                                     title: '¡Éxito!',
-                                    text: 'Cliente actualizado correctamente',
+                                    text: 'Usuario actualizado correctamente',
                                     icon: 'success',
                                     confirmButtonColor: '#4CAF50',
                                     customClass: {
@@ -623,7 +644,7 @@
                             .catch(error => {
                                 Swal.fire({
                                     title: 'Error',
-                                    text: error.message || 'Ocurrió un error al actualizar el cliente',
+                                    text: error.message || 'Ocurrió un error al actualizar el usuario',
                                     icon: 'error',
                                     confirmButtonColor: '#d33',
                                     customClass: {
@@ -638,7 +659,7 @@
                 .catch(error => {
                     Swal.fire({
                         title: 'Error',
-                        text: 'No se pudo cargar la información del cliente',
+                        text: 'No se pudo cargar la información del usuario',
                         icon: 'error',
                         confirmButtonColor: '#d33',
                         customClass: {
@@ -649,11 +670,11 @@
                 });
         }
 
-        function verCliente(id) {
+        function verUsuario(id) {
             // Mostrar loading
             Swal.fire({
                 title: 'Cargando...',
-                text: 'Obteniendo información del cliente',
+                text: 'Obteniendo información del usuario',
                 icon: 'info',
                 allowOutsideClick: false,
                 showConfirmButton: false,
@@ -662,75 +683,72 @@
                 }
             });
 
-            // Obtener datos del cliente
-            fetch('/api/clientes/' + id)
+            // Obtener datos del usuario
+            fetch('/api/usuarios/' + id)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
                     } else {
-                        throw new Error('Cliente no encontrado');
+                        throw new Error('Usuario no encontrado');
                     }
                 })
-                .then(cliente => {
+                .then(usuario => {
                     Swal.fire({
-                        title: 'Detalles del Cliente',
+                        title: 'Detalles del Usuario',
                         html: `
                             <div class="text-left space-y-4">
                                 <div class="flex items-center justify-center mb-6">
                                     <div class="w-16 h-16 bg-olpesa-green rounded-full flex items-center justify-center">
-                                        <span class="text-white text-2xl font-bold">${cliente.nombreRazon.charAt(0).toUpperCase()}</span>
+                                        <span class="text-white text-2xl font-bold">${usuario.nombre.charAt(0).toUpperCase()}${usuario.apellido.charAt(0).toUpperCase()}</span>
                                     </div>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="bg-gray-50 p-3 rounded-lg">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Nombre / Razón Social</label>
-                                        <p class="text-gray-900 font-medium">${cliente.nombreRazon}</p>
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Nombre</label>
+                                        <p class="text-gray-900 font-medium">${usuario.nombre}</p>
                                     </div>
                                     
                                     <div class="bg-gray-50 p-3 rounded-lg">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Estado</label>
-                                        <span class="${cliente.estado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-2 py-1 rounded-full text-sm font-medium">
-                                            ${cliente.estado ? 'Activo' : 'Inactivo'}
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Tipo de Documento</label>
-                                        <p class="text-gray-900">${cliente.tipoDocumento}</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Número de Documento</label>
-                                        <p class="text-gray-900 font-mono">${cliente.numeroDocumento}</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded-lg md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Dirección</label>
-                                        <p class="text-gray-900">${cliente.direccion}</p>
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Apellido</label>
+                                        <p class="text-gray-900 font-medium">${usuario.apellido}</p>
                                     </div>
                                     
                                     <div class="bg-gray-50 p-3 rounded-lg">
                                         <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                                        <p class="text-gray-900">${cliente.email}</p>
+                                        <p class="text-gray-900">${usuario.email}</p>
                                     </div>
                                     
                                     <div class="bg-gray-50 p-3 rounded-lg">
-                                        <label class="block text-sm font-medium text-gray-600 mb-1">Teléfono</label>
-                                        <p class="text-gray-900">${cliente.telefono}</p>
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Username</label>
+                                        <p class="text-gray-900 font-mono">${usuario.username}</p>
                                     </div>
                                     
-                                    ${cliente.createdAt ? `
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Rol</label>
+                                        <span class="${usuario.rol === 'ADMIN' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'} px-2 py-1 rounded-full text-sm font-medium">
+                                            ${usuario.rol === 'ADMIN' ? 'Administrador' : 'Usuario'}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Estado</label>
+                                        <span class="${usuario.estado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-2 py-1 rounded-full text-sm font-medium">
+                                            ${usuario.estado ? 'Activo' : 'Inactivo'}
+                                        </span>
+                                    </div>
+                                    
+                                    ${usuario.createdAt ? `
                                     <div class="bg-gray-50 p-3 rounded-lg">
                                         <label class="block text-sm font-medium text-gray-600 mb-1">Fecha de Registro</label>
-                                        <p class="text-gray-900">${new Date(cliente.createdAt).toLocaleDateString('es-ES')}</p>
+                                        <p class="text-gray-900">${new Date(usuario.createdAt).toLocaleDateString('es-ES')}</p>
                                     </div>
                                     ` : ''}
                                     
-                                    ${cliente.updatedAt ? `
+                                    ${usuario.updatedAt ? `
                                     <div class="bg-gray-50 p-3 rounded-lg">
                                         <label class="block text-sm font-medium text-gray-600 mb-1">Última Actualización</label>
-                                        <p class="text-gray-900">${new Date(cliente.updatedAt).toLocaleDateString('es-ES')}</p>
+                                        <p class="text-gray-900">${new Date(usuario.updatedAt).toLocaleDateString('es-ES')}</p>
                                     </div>
                                     ` : ''}
                                 </div>
@@ -739,7 +757,7 @@
                         width: '800px',
                         showCancelButton: true,
                         showConfirmButton: true,
-                        confirmButtonText: 'Editar Cliente',
+                        confirmButtonText: 'Editar Usuario',
                         cancelButtonText: 'Cerrar',
                         confirmButtonColor: '#4CAF50',
                         cancelButtonColor: '#6b7280',
@@ -751,15 +769,15 @@
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Si el usuario hace clic en "Editar Cliente", abrir el modal de edición
-                            editarCliente(id);
+                            // Si el usuario hace clic en "Editar Usuario", abrir el modal de edición
+                            editarUsuario(id);
                         }
                     });
                 })
                 .catch(error => {
                     Swal.fire({
                         title: 'Error',
-                        text: error.message || 'No se pudo cargar la información del cliente',
+                        text: error.message || 'No se pudo cargar la información del usuario',
                         icon: 'error',
                         confirmButtonColor: '#d33',
                         customClass: {
@@ -770,10 +788,10 @@
                 });
         }
 
-        function activarCliente(id) {
+        function activarUsuario(id) {
             Swal.fire({
-                title: '¿Activar cliente?',
-                text: "El cliente será marcado como activo.",
+                title: '¿Activar usuario?',
+                text: "El usuario será marcado como activo.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#4CAF50',
@@ -798,8 +816,8 @@
                         }
                     });
                     
-                    // Llamada REST para activar cliente
-                    fetch('/api/clientes/activar/' + id, {
+                    // Llamada REST para activar usuario
+                    fetch('/api/usuarios/activar/' + id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -809,13 +827,13 @@
                         if (response.ok) {
                             return response.text();
                         } else {
-                            throw new Error('Error al activar el cliente');
+                            throw new Error('Error al activar el usuario');
                         }
                     })
                     .then(message => {
                         Swal.fire({
                             title: '¡Éxito!',
-                            text: 'Cliente activado correctamente',
+                            text: 'Usuario activado correctamente',
                             icon: 'success',
                             confirmButtonColor: '#4CAF50',
                             customClass: {
@@ -829,7 +847,7 @@
                     .catch(error => {
                         Swal.fire({
                             title: 'Error',
-                            text: error.message || 'Ocurrió un error al activar el cliente',
+                            text: error.message || 'Ocurrió un error al activar el usuario',
                             icon: 'error',
                             confirmButtonColor: '#d33',
                             customClass: {
@@ -842,7 +860,7 @@
             });
         }
 
-        function eliminarCliente(id) {
+        function eliminarUsuario(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "Esta acción no se puede deshacer",
@@ -871,9 +889,9 @@
                         }
                     });
                     
-                    // Llamada REST para eliminar cliente
-                    fetch('/api/clientes/' + id, {
-                        method: 'DELETE',
+                    // Llamada REST para eliminar usuario
+                    fetch('/api/usuarios/desactivar/' + id, {
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                         }
@@ -882,13 +900,13 @@
                         if (response.ok) {
                             return response.text();
                         } else {
-                            throw new Error('Error al eliminar el cliente');
+                            throw new Error('Error al eliminar el usuario');
                         }
                     })
                     .then(message => {
                         Swal.fire({
                             title: '¡Éxito!',
-                            text: 'Cliente eliminado correctamente',
+                            text: 'Usuario eliminado correctamente',
                             icon: 'success',
                             confirmButtonColor: '#4CAF50',
                             customClass: {
@@ -902,7 +920,7 @@
                     .catch(error => {
                         Swal.fire({
                             title: 'Error',
-                            text: error.message || 'Ocurrió un error al eliminar el cliente',
+                            text: error.message || 'Ocurrió un error al eliminar el usuario',
                             icon: 'error',
                             confirmButtonColor: '#d33',
                             customClass: {
@@ -917,7 +935,7 @@
 
         function goToPage(page) {
             // Lógica para ir a una página específica
-            window.location.href = '/clientes?page=' + page;
+            window.location.href = '/usuarios?page=' + page;
         }
     </script>
 </main>
