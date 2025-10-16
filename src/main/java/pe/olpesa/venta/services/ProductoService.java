@@ -127,4 +127,18 @@ public class ProductoService {
         }
         return null;
     }
+
+    // Contar productos activos
+    public int contarProductosActivos() {
+        return (int) listarProductos().stream()
+                .filter(producto -> producto.isEstado())
+                .count();
+    }
+
+    // Contar productos inactivos
+    public int contarProductosInactivos() {
+        return (int) listarProductos().stream()
+                .filter(producto -> producto.isEstado() == false)
+                .count();
+    }
 }

@@ -17,7 +17,7 @@ public class UsuarioController {
     
     private final UsuarioService usuarioService;
 
-        @GetMapping
+    @GetMapping
     public String listarClientes(Model model,
                                 @RequestParam(defaultValue = "1") int page,
                                 @RequestParam(defaultValue = "10") int size) {

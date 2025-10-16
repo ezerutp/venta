@@ -57,6 +57,17 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    // Actualizar usuario sin cifrar la contraseña (para actualizaciones)
+    public Usuario actualizarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    // Actualizar usuario con nueva contraseña
+    public Usuario actualizarUsuarioConNuevaPassword(Usuario usuario, String nuevaPassword) {
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        return usuarioRepository.save(usuario);
+    }
+
     // Eliminar (desactivar) usuario por ID
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);

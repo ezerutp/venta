@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{fragments/base :: layout('OLPESA - Gestión de Productos', ~{::main})}">
+
+<!-- Variables para el header -->
+<th:block th:with="pageTitle='Productos', pageSubtitle='Gestión de productos e inventario'"></th:block>
+
+<!-- Contenido específico de Productos -->
+<main>
+    <div class="flex-1 overflow-auto p-8 m-4">
+        <!-- Botones de acción -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex space-x-4">
+                <button onclick="crearProducto()"
+                    class="bg-olpesa-green text-white px-4 py-2 rounded-lg hover:bg-olpesa-dark-green transition-colors">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Nuevo Producto
+                </button>
+                <button class="bg-olpesa-orange text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Importar
+                </button>
+            </div>
+
+            <div class="flex space-x-2">
+                <input type="text" placeholder="Buscar productos..."
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de estadísticas de productos -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Total Productos</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${totalProductos ?: '0'}">0</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-green/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Activos</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${productosActivos ?: '0'}">0</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-light-green/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-light-green" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Stock Bajo</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${productosStockBajo ?: '0'}">0</p>
+                    </div>
+                    <div class="p-3 bg-olpesa-orange/10 rounded-xl">
+                        <svg class="w-6 h-6 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">Inactivos</p>
+                        <p class="text-2xl font-bold text-olpesa-gray" th:text="${productosInactivos ?: '0'}">0</p>
+                    </div>
+                    <div class="p-3 bg-red-100 rounded-xl">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="stat-card rounded-xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-olpesa-gray">Lista de Productos</h3>
+                <div class="flex space-x-2">
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option>Todos los estados</option>
+                        <option>Activos</option>
+                        <option>Inactivos</option>
+                    </select>
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option>Ordenar por</option>
+                        <option>Nombre</option>
+                        <option>SKU</option>
+                        <option>Precio</option>
+                        <option>Stock</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 text-gray-600 font-medium">
+                                <input type="checkbox" class="rounded">
+                            </th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Producto</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">SKU</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Código de Barras</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Precio</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Stock</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Estado</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="producto : ${productos}" class="border-b border-gray-100 hover:bg-gray-50/50">
+                            <td class="py-3">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="py-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm font-semibold"
+                                            th:text="${#strings.substring(producto.nombre, 0, 1)}">P</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-olpesa-gray font-medium" th:text="${producto.nombre}">Producto Ejemplo</p>
+                                        <p class="text-gray-500 text-xs" th:text="${#strings.abbreviate(producto.descripcion, 40)}">
+                                            Descripción del producto...</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray" th:text="${producto.sku}">SKU001</td>
+                            <td class="py-3 text-olpesa-gray" th:text="${producto.codigoBarras}">1234567890123</td>
+                            <td class="py-3 text-olpesa-gray">
+                                <span th:text="'S/ ' + ${#numbers.formatDecimal(producto.precioUnitario, 1, 2)}">S/ 0.00</span>
+                                <div th:if="${producto.afectoImpuesto}" class="text-xs text-gray-500">+ IGV</div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray">
+                                <span th:text="${#numbers.formatDecimal(producto.stockActual, 1, 2)}">0.00</span>
+                                <div th:if="${producto.stockActual <= 10}" class="text-xs text-red-500">Stock bajo</div>
+                            </td>
+                            <td class="py-3">
+                                <span th:if="${producto.estado}" class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                                <span th:if="${!producto.estado}" class="px-2 py-1 bg-red-100 text-red-500 rounded-full text-xs">Inactivo</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex space-x-2">
+                                    <button th:onclick="'editarProducto(' + ${producto.id} + ')'"
+                                        class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button th:onclick="'verProducto(' + ${producto.id} + ')'"
+                                        class="text-olpesa-orange hover:opacity-80" title="Ver detalles">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <span th:if="${producto.estado}">
+                                        <button th:onclick="'eliminarProducto(' + ${producto.id} + ')'"
+                                            class="text-red-500 hover:text-red-700" title="Eliminar">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                    <span th:if="${!producto.estado}">
+                                        <button th:onclick="'activarProducto(' + ${producto.id} + ')'"
+                                            class="text-olpesa-green hover:text-olpesa-dark-green" title="Activar">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Ejemplo estático si no hay datos -->
+                        <tr th:if="${#lists.isEmpty(productos)}" class="border-b border-gray-100">
+                            <td class="py-3"><input type="checkbox" class="rounded"></td>
+                            <td class="py-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-olpesa-green rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm font-semibold">P</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-olpesa-gray font-medium">Producto de Ejemplo</p>
+                                        <p class="text-gray-500 text-xs">Descripción del producto...</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray">SKU001</td>
+                            <td class="py-3 text-olpesa-gray">1234567890123</td>
+                            <td class="py-3 text-olpesa-gray">
+                                <span>S/ 25.50</span>
+                                <div class="text-xs text-gray-500">+ IGV</div>
+                            </td>
+                            <td class="py-3 text-olpesa-gray">100.00</td>
+                            <td class="py-3">
+                                <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Activo</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex space-x-2">
+                                    <button class="text-olpesa-green hover:text-olpesa-dark-green" title="Editar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button class="text-olpesa-orange hover:opacity-80" title="Ver detalles">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="flex items-center justify-between mt-6">
+                <div class="text-sm text-gray-500">
+                    Mostrando <span th:text="${(currentPage - 1) * pageSize + 1}">1</span> a
+                    <span th:text="${currentPage * pageSize}">10</span> de
+                    <span th:text="${totalElements}">0</span> resultados
+                </div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50"
+                        th:disabled="${currentPage == 1}">Anterior</button>
+                    <button th:each="page : ${#numbers.sequence(1, totalPages)}" th:text="${page}"
+                        th:class="${page == currentPage} ? 'px-3 py-1 bg-olpesa-green text-white rounded' : 'px-3 py-1 border border-gray-300 rounded hover:bg-gray-50'"
+                        th:onclick="'goToPage(' + ${page} + ')'">1</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50"
+                        th:disabled="${currentPage == totalPages}">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts específicos de productos -->
+    <script>
+        function crearProducto() {
+            Swal.fire({
+                title: 'Crear Nuevo Producto',
+                html: `
+                    <form id="crearProductoForm" class="text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                                <input type="text" name="sku" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Ejemplo: PROD001">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Código de Barras *</label>
+                                <input type="text" name="codigoBarras" required pattern="[0-9]+"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Solo números">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Producto *</label>
+                                <input type="text" name="nombre" required maxlength="100"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Nombre del producto">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Descripción *</label>
+                                <textarea name="descripcion" required maxlength="500" rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Descripción del producto"></textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Precio Unitario *</label>
+                                <input type="number" name="precioUnitario" required step="0.01" min="0"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="0.00">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Inicial *</label>
+                                <input type="number" name="stockActual" required step="0.01" min="0"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="0.00">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="afectoImpuesto" class="rounded mr-2">
+                                    <span class="text-sm font-medium text-gray-700">Afecto a Impuesto (IGV)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                `,
+                width: '800px',
+                showCancelButton: true,
+                confirmButtonText: 'Crear Producto',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2',
+                    htmlContainer: 'text-left'
+                },
+                preConfirm: () => {
+                    const form = document.getElementById('crearProductoForm');
+                    const formData = new FormData(form);
+                    
+                    const sku = formData.get('sku');
+                    const codigoBarras = formData.get('codigoBarras');
+                    const nombre = formData.get('nombre');
+                    const descripcion = formData.get('descripcion');
+                    const precioUnitario = formData.get('precioUnitario');
+                    const stockActual = formData.get('stockActual');
+                    
+                    if (!sku || !codigoBarras || !nombre || !descripcion || !precioUnitario || !stockActual) {
+                        Swal.showValidationMessage('Todos los campos marcados con * son requeridos');
+                        return false;
+                    }
+                    
+                    if (!/^[0-9]+$/.test(codigoBarras)) {
+                        Swal.showValidationMessage('El código de barras debe contener solo números');
+                        return false;
+                    }
+                    
+                    if (parseFloat(precioUnitario) <= 0) {
+                        Swal.showValidationMessage('El precio debe ser mayor a 0');
+                        return false;
+                    }
+                    
+                    if (parseFloat(stockActual) < 0) {
+                        Swal.showValidationMessage('El stock no puede ser negativo');
+                        return false;
+                    }
+                    
+                    return {
+                        sku: sku,
+                        codigoBarras: codigoBarras,
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        precioUnitario: parseFloat(precioUnitario),
+                        stockActual: parseFloat(stockActual),
+                        afectoImpuesto: formData.get('afectoImpuesto') === 'on'
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Creando producto...',
+                        text: 'Por favor espere',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch('/api/productos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            return response.text().then(text => { throw new Error(text); });
+                        }
+                    })
+                    .then(productoCreado => {
+                        Swal.fire({
+                            title: '¡Producto creado!',
+                            text: 'El producto ha sido creado exitosamente',
+                            icon: 'success',
+                            confirmButtonColor: '#4CAF50',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message || 'No se pudo crear el producto',
+                            icon: 'error',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function editarProducto(id) {
+            fetch('/api/productos/' + id)
+                .then(response => response.json())
+                .then(producto => {
+                    Swal.fire({
+                        title: 'Editar Producto',
+                        html: `
+                            <form id="editarProductoForm" class="text-left">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                                        <input type="text" name="sku" required value="${producto.sku}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Código de Barras *</label>
+                                        <input type="text" name="codigoBarras" required pattern="[0-9]+" value="${producto.codigoBarras}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Producto *</label>
+                                        <input type="text" name="nombre" required maxlength="100" value="${producto.nombre}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Descripción *</label>
+                                        <textarea name="descripcion" required maxlength="500" rows="3"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">${producto.descripcion}</textarea>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Precio Unitario *</label>
+                                        <input type="number" name="precioUnitario" required step="0.01" min="0" value="${producto.precioUnitario}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Stock Actual *</label>
+                                        <input type="number" name="stockActual" required step="0.01" min="0" value="${producto.stockActual}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" name="afectoImpuesto" ${producto.afectoImpuesto ? 'checked' : ''} class="rounded mr-2">
+                                            <span class="text-sm font-medium text-gray-700">Afecto a Impuesto (IGV)</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="mb-4 md:col-span-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" name="estado" ${producto.estado ? 'checked' : ''} class="rounded mr-2">
+                                            <span class="text-sm font-medium text-gray-700">Producto Activo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        `,
+                        width: '800px',
+                        showCancelButton: true,
+                        confirmButtonText: 'Actualizar',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor: '#4CAF50',
+                        cancelButtonColor: '#d33',
+                        customClass: {
+                            popup: 'rounded-xl',
+                            confirmButton: 'rounded-lg px-6 py-2',
+                            cancelButton: 'rounded-lg px-6 py-2',
+                            htmlContainer: 'text-left'
+                        },
+                        preConfirm: () => {
+                            const form = document.getElementById('editarProductoForm');
+                            const formData = new FormData(form);
+                            
+                            return {
+                                sku: formData.get('sku'),
+                                codigoBarras: formData.get('codigoBarras'),
+                                nombre: formData.get('nombre'),
+                                descripcion: formData.get('descripcion'),
+                                precioUnitario: parseFloat(formData.get('precioUnitario')),
+                                stockActual: parseFloat(formData.get('stockActual')),
+                                afectoImpuesto: formData.get('afectoImpuesto') === 'on',
+                                estado: formData.get('estado') === 'on'
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('/api/productos/' + id, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(result.value)
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    return response.text().then(text => { throw new Error(text); });
+                                }
+                            })
+                            .then(() => {
+                                Swal.fire({
+                                    title: '¡Actualizado!',
+                                    text: 'El producto ha sido actualizado exitosamente',
+                                    icon: 'success',
+                                    confirmButtonColor: '#4CAF50'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: error.message || 'No se pudo actualizar el producto',
+                                    icon: 'error',
+                                    confirmButtonColor: '#d33'
+                                });
+                            });
+                        }
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No se pudo obtener la información del producto',
+                        icon: 'error',
+                        confirmButtonColor: '#d33'
+                    });
+                });
+        }
+
+        function verProducto(id) {
+            Swal.fire({
+                title: 'Cargando...',
+                text: 'Obteniendo información del producto',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch('/api/productos/' + id)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Producto no encontrado');
+                    }
+                })
+                .then(producto => {
+                    Swal.fire({
+                        title: 'Información del Producto',
+                        html: `
+                            <div class="text-left space-y-4">
+                                <div class="flex items-center justify-center mb-6">
+                                    <div class="w-16 h-16 bg-olpesa-green rounded-full flex items-center justify-center">
+                                        <span class="text-white text-2xl font-bold">${producto.nombre.charAt(0).toUpperCase()}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-3 rounded-lg md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Nombre</label>
+                                        <p class="text-gray-900 font-medium">${producto.nombre}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Descripción</label>
+                                        <p class="text-gray-900">${producto.descripcion}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">SKU</label>
+                                        <p class="text-gray-900 font-mono">${producto.sku}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Código de Barras</label>
+                                        <p class="text-gray-900 font-mono">${producto.codigoBarras}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Precio Unitario</label>
+                                        <p class="text-gray-900">S/ ${producto.precioUnitario.toFixed(2)} ${producto.afectoImpuesto ? '(+ IGV)' : ''}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Stock Actual</label>
+                                        <p class="text-gray-900">${producto.stockActual}</p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Estado</label>
+                                        <span class="${producto.estado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-2 py-1 rounded-full text-sm font-medium">
+                                            ${producto.estado ? 'Activo' : 'Inactivo'}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <label class="block text-sm font-medium text-gray-600 mb-1">Afecto a IGV</label>
+                                        <span class="${producto.afectoImpuesto ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'} px-2 py-1 rounded-full text-sm font-medium">
+                                            ${producto.afectoImpuesto ? 'Sí' : 'No'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        width: '800px',
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Editar Producto',
+                        cancelButtonText: 'Cerrar',
+                        confirmButtonColor: '#4CAF50',
+                        cancelButtonColor: '#6b7280',
+                        customClass: {
+                            popup: 'rounded-xl',
+                            confirmButton: 'rounded-lg px-6 py-2',
+                            cancelButton: 'rounded-lg px-6 py-2',
+                            htmlContainer: 'text-left'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            editarProducto(id);
+                        }
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33'
+                    });
+                });
+        }
+
+        function activarProducto(id) {
+            Swal.fire({
+                title: '¿Activar producto?',
+                text: "El producto será marcado como activo.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, activar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Activando...',
+                        text: 'Por favor espere',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch('/api/productos/activar/' + id, {
+                        method: 'PUT'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Error al activar el producto');
+                        }
+                    })
+                    .then(message => {
+                        Swal.fire({
+                            title: '¡Activado!',
+                            text: message,
+                            icon: 'success',
+                            confirmButtonColor: '#4CAF50',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function eliminarProducto(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#4CAF50',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Eliminando...',
+                        text: 'Por favor espere',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch('/api/productos/' + id, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Error al eliminar el producto');
+                        }
+                    })
+                    .then(message => {
+                        Swal.fire({
+                            title: '¡Eliminado!',
+                            text: message,
+                            icon: 'success',
+                            confirmButtonColor: '#4CAF50',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function goToPage(page) {
+            window.location.href = '/productos?page=' + page;
+        }
+    </script>
+</main>
+
+</html>

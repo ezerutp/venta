@@ -15,6 +15,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import pe.olpesa.venta.dto.UsuarioActualizacionDto;
 import pe.olpesa.venta.entities.Usuario;
 import pe.olpesa.venta.services.UsuarioService;
 
@@ -95,7 +96,7 @@ public class UsuarioRestController {
     
     // Actualizar usuario
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuarioActualizado, BindingResult result) {
+    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioActualizacionDto usuarioDto, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Datos inválidos");
         }
@@ -106,25 +107,28 @@ public class UsuarioRestController {
         }
         
         // Verificar que el email no esté en uso por otro usuario
-        Usuario usuarioConMismoEmail = usuarioService.obtenerUsuarioPorEmail(usuarioActualizado.getEmail());
+        Usuario usuarioConMismoEmail = usuarioService.obtenerUsuarioPorEmail(usuarioDto.getEmail());
         if (usuarioConMismoEmail != null && !usuarioConMismoEmail.getId().equals(id)) {
             return ResponseEntity.badRequest().body("Ya existe un usuario con ese email");
         }
         
         // Actualizar los campos (excepto la contraseña si está vacía)
-        usuarioExistente.setNombre(usuarioActualizado.getNombre());
-        usuarioExistente.setApellido(usuarioActualizado.getApellido());
-        usuarioExistente.setEmail(usuarioActualizado.getEmail());
-        usuarioExistente.setUsername(usuarioActualizado.getUsername());
-        usuarioExistente.setRol(usuarioActualizado.getRol());
-        usuarioExistente.setEstado(usuarioActualizado.isEstado());
+        usuarioExistente.setNombre(usuarioDto.getNombre());
+        usuarioExistente.setApellido(usuarioDto.getApellido());
+        usuarioExistente.setEmail(usuarioDto.getEmail());
+        usuarioExistente.setUsername(usuarioDto.getUsername());
+        usuarioExistente.setRol(usuarioDto.getRol());
+        usuarioExistente.setEstado(usuarioDto.isEstado());
         
+        Usuario usuarioGuardado;
         // Solo actualizar la contraseña si se proporciona una nueva
-        if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().trim().isEmpty()) {
-            usuarioExistente.setPassword(usuarioActualizado.getPassword());
+        if (usuarioDto.getPassword() != null && !usuarioDto.getPassword().trim().isEmpty()) {
+            usuarioGuardado = usuarioService.actualizarUsuarioConNuevaPassword(usuarioExistente, usuarioDto.getPassword());
+        } else {
+            // Actualizar sin cambiar la contraseña
+            usuarioGuardado = usuarioService.actualizarUsuario(usuarioExistente);
         }
         
-        Usuario usuarioGuardado = usuarioService.guardarUsuario(usuarioExistente);
         return ResponseEntity.ok(usuarioGuardado);
     }
 
