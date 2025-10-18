@@ -5,6 +5,26 @@
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
 [![Maven](https://img.shields.io/badge/Maven-4.0.0-red.svg)](https://maven.apache.org/)
 
+## 🧾 Nota académica
+
+> ⚠️ **Aviso importante — No desplegar en producción sin revisar la seguridad**  
+> Este proyecto se desarrolló con fines académicos. La configuración de seguridad (protección de endpoints, manejo fino de roles y políticas de autorización) no está completamente robusta y puede contener brechas si se usa en entornos productivos.
+
+Riesgos clave:
+- Endpoints o permisos demasiado permisivos.
+- Manejo de credenciales y secretos en archivos de configuración.
+- Configuraciones de seguridad y políticas no auditadas.
+
+Recomendaciones rápidas antes de cualquier despliegue:
+- Realizar una auditoría de seguridad y pruebas de penetración.
+- Revisar y endurecer control de accesos por endpoints y roles.
+- Gestionar secretos fuera del repositorio (variables de entorno / vault).
+- Forzar HTTPS, validar CORS y encabezados de seguridad (CSP, HSTS).
+- Desactivar DDL auto y ajustar políticas de logging y monitoreo en producción.
+- Actualizar dependencias y aplicar buenas prácticas de almacenamiento de contraseñas.
+
+Priorizar estas tareas para que la nota académica no pase desapercibida y evitar riesgos en producción.
+
 ## 📝 Descripción
 
 Sistema de gestión de ventas desarrollado con **Spring Boot** para la empresa OLPESA. Este sistema permite gestionar clientes, productos, usuarios y ventas de manera integral, con autenticación y autorización de usuarios.
