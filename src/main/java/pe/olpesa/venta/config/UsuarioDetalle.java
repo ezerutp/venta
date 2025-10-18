@@ -31,6 +31,10 @@ public class UsuarioDetalle implements UserDetails {
         return usuario.getUsername();
     }
 
+    public Long getId() {
+        return usuario.getId();
+    }
+
     public String getIniciales() {
         return new StringBuilder()
                 .append(usuario.getNombre().charAt(0))
