@@ -141,4 +141,11 @@ public class ProductoService {
                 .filter(producto -> producto.isEstado() == false)
                 .count();
     }
+
+    // Contar productos con stock bajo (definido como stockActual <= 10)
+    public int contarProductosStockBajo() {
+        return (int) listarProductos().stream()
+                .filter(producto -> producto.getStockActual() <= 10.0)
+                .count();
+    }
 }

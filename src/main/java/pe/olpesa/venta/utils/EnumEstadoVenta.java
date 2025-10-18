@@ -2,7 +2,7 @@ package pe.olpesa.venta.utils;
 
 public enum EnumEstadoVenta {
     PENDIENTE,
-    COMPLETADO,
+    COMPLETADA,
     CANCELADA,
     CONFIRMADA
 }

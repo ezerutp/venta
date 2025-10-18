@@ -32,6 +32,7 @@ public class ProductoController {
         model.addAttribute("totalProductos", productos.size());
         model.addAttribute("productosActivos", productoService.contarProductosActivos());
         model.addAttribute("productosInactivos", productoService.contarProductosInactivos());
+        model.addAttribute("productosStockBajo", productoService.contarProductosStockBajo());
 
         // Paginación ... luego implementar
         model.addAttribute("currentPage", page);

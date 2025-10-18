@@ -163,7 +163,7 @@
                             <td class="py-3 text-olpesa-gray" th:text="${producto.codigoBarras}">1234567890123</td>
                             <td class="py-3 text-olpesa-gray">
                                 <span th:text="'S/ ' + ${#numbers.formatDecimal(producto.precioUnitario, 1, 2)}">S/ 0.00</span>
-                                <div th:if="${producto.afectoImpuesto}" class="text-xs text-gray-500">+ IGV</div>
+                                <span th:if="${producto.afectoImpuesto}" class="inline-block ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">IGV</span>
                             </td>
                             <td class="py-3 text-olpesa-gray">
                                 <span th:text="${#numbers.formatDecimal(producto.stockActual, 1, 2)}">0.00</span>
@@ -774,12 +774,12 @@
         function eliminarProducto(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer",
+                text: "Esta acción se puede deshacer",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#4CAF50',
-                confirmButtonText: 'Sí, eliminar',
+                confirmButtonText: 'Sí, desactivar',
                 cancelButtonText: 'Cancelar',
                 customClass: {
                     popup: 'rounded-xl',
@@ -789,7 +789,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Eliminando...',
+                        title: 'Desactivando...',
                         text: 'Por favor espere',
                         icon: 'info',
                         allowOutsideClick: false,
@@ -799,19 +799,19 @@
                         }
                     });
                     
-                    fetch('/api/productos/' + id, {
-                        method: 'DELETE'
+                    fetch('/api/productos/desactivar/' + id, {
+                        method: 'PUT'
                     })
                     .then(response => {
                         if (response.ok) {
                             return response.text();
                         } else {
-                            throw new Error('Error al eliminar el producto');
+                            throw new Error('Error al desactivar el producto');
                         }
                     })
                     .then(message => {
                         Swal.fire({
-                            title: '¡Eliminado!',
+                            title: '¡Desactivado!',
                             text: message,
                             icon: 'success',
                             confirmButtonColor: '#4CAF50',
