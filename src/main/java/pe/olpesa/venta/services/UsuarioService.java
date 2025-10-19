@@ -96,4 +96,10 @@ public class UsuarioService {
                 .filter(usuario -> usuario.isEstado() == false)
                 .count();
     }
+
+    // Contar usuarios por rol
+    public int contarUsuariosPorRol(String rolStr) {
+        EnumRol rol = EnumRol.valueOf(rolStr);
+        return usuarioRepository.countByRol(rol);
+    }
 }

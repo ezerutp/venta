@@ -26,4 +26,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     // Buscar usuarios por nombre o apellido (conteniendo texto, ignorando mayúsculas)
     List<Usuario> findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCase(String nombre, String apellido);
     
+    // Contar usuarios por rol
+    int countByRol(EnumRol rol);
 }

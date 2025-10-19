@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ public class VentaService {
     private final VentaRepository ventaRepository;
 
     public List<Venta> listarVentas() {
-        return ventaRepository.findAll();
+        return ventaRepository.findAllWithDetails();
     }
 
     public Optional<Venta> obtenerVentaPorId(Long id) {
@@ -273,5 +275,11 @@ public class VentaService {
 
     public boolean puedeEliminarVenta(Long id) {
         return puedeModificarVenta(id);
+    }
+
+    // Ultima 3 ventas
+    public List<Venta> obtenerUltimasVentas(int cantidad) {
+        Pageable pageable = PageRequest.of(0, cantidad);
+        return ventaRepository.findTopVentasWithDetails(pageable);
     }
 }

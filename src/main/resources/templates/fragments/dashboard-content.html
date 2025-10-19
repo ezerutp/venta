@@ -10,8 +10,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-olpesa-gray/60 text-sm font-medium">Total Clientes</p>
-                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="1,247">0</p>
-                    <p class="text-olpesa-green text-xs mt-1">+12% este mes</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" th:data-target="${totalClientes}" th:text="${totalClientes}">0</p>
+                    <p class="text-olpesa-green text-xs mt-1" th:text="${crecimientoClientes} + ' este mes'">+12% este mes</p>
                 </div>
                 <div class="p-3 bg-olpesa-green/10 rounded-xl">
                     <svg class="w-8 h-8 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,8 +26,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-olpesa-gray/60 text-sm font-medium">Productos</p>
-                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="89">0</p>
-                    <p class="text-olpesa-orange text-xs mt-1">+5 nuevos</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" th:data-target="${totalProductos}" th:text="${totalProductos}">0</p>
+                    <p class="text-olpesa-orange text-xs mt-1" th:text="${productosNuevos} + ' nuevos'">+5 nuevos</p>
                 </div>
                 <div class="p-3 bg-olpesa-orange/10 rounded-xl">
                     <svg class="w-8 h-8 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-olpesa-gray/60 text-sm font-medium">Ventas Hoy</p>
-                    <p class="text-3xl font-bold text-olpesa-gray">S/ <span class="counter" data-target="24,580">0</span></p>
-                    <p class="text-olpesa-green text-xs mt-1">+8% vs ayer</p>
+                    <p class="text-3xl font-bold text-olpesa-gray">S/ <span class="counter" th:data-target="${ventasHoy}" th:text="${#numbers.formatDecimal(ventasHoy, 1, 'COMMA', 0, 'POINT')}">0</span></p>
+                    <p class="text-olpesa-green text-xs mt-1" th:text="${crecimientoVentas} + ' vs ayer'">+8% vs ayer</p>
                 </div>
                 <div class="p-3 bg-olpesa-light-green/10 rounded-xl">
                     <svg class="w-8 h-8 text-olpesa-light-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,9 +57,9 @@
         <div class="stat-card card-hover rounded-2xl p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-olpesa-gray/60 text-sm font-medium">Usuarios Activos</p>
-                    <p class="text-3xl font-bold text-olpesa-gray counter" data-target="18">0</p>
-                    <p class="text-olpesa-green text-xs mt-1">Online ahora</p>
+                    <p class="text-olpesa-gray/60 text-sm font-medium">Usuarios Administradores</p>
+                    <p class="text-3xl font-bold text-olpesa-gray counter" th:data-target="${totalAdministradores}" th:text="${totalAdministradores}">0</p>
+                    <p class="text-olpesa-green text-xs mt-1" th:text="${estadoUsuarios}">Online ahora</p>
                 </div>
                 <div class="p-3 bg-olpesa-green/10 rounded-xl">
                     <svg class="w-8 h-8 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,26 +90,29 @@
         <div class="stat-card rounded-2xl p-6">
             <h3 class="text-xl font-bold text-olpesa-gray mb-6">Acciones Rápidas</h3>
             <div class="space-y-4">
-                <a href="/clientes/nuevo" class="w-full p-4 bg-olpesa-green text-white rounded-xl hover:bg-olpesa-dark-green transition-all duration-300 flex items-center space-x-3">
+                <button onclick="abrirModalCliente()" class="w-full p-4 bg-olpesa-green text-white rounded-xl hover:bg-olpesa-dark-green transition-all duration-300 flex items-center space-x-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     <span>Nuevo Cliente</span>
-                </a>
+                </button>
                 
-                <a href="/productos/nuevo" class="w-full p-4 bg-olpesa-orange text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
+                <button onclick="abrirModalProducto()" class="w-full p-4 bg-olpesa-orange text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                     </svg>
                     <span>Agregar Producto</span>
-                </a>
+                </button>
                 
-                <a href="/ventas/nuevo" class="w-full p-4 bg-olpesa-light-green text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
+                <button onclick="abrirModalVenta()" 
+                        th:data-usuario-id="${usuarioAutenticadoId}"
+                        th:data-usuario-nombre="${usuarioAutenticadoNombre}"
+                        class="w-full p-4 bg-olpesa-light-green text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 3H5a2 2 0 00-2 2v1m0 0h18M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17a2 2 0 002-2v-4a2 2 0 00-2-2H9.414"></path>
                     </svg>
                     <span>Nueva Venta</span>
-                </a>
+                </button>
                 
                 <a href="/reportes" class="w-full p-4 bg-olpesa-gray text-white rounded-xl hover:opacity-90 transition-all duration-300 flex items-center space-x-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,35 +144,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
-                        <td class="py-3 text-olpesa-gray">#001</td>
-                        <td class="py-3 text-olpesa-gray">Juan Pérez</td>
-                        <td class="py-3 text-olpesa-gray">Aceite de Palma</td>
-                        <td class="py-3 text-olpesa-gray">S/ 1,250</td>
+                    <tr th:each="venta : ${ultimasVentas}" class="border-b border-gray-100 hover:bg-gray-50/50">
+                        <td class="py-3 text-olpesa-gray" th:text="'#' + ${venta.id}">#001</td>
+                        <td class="py-3 text-olpesa-gray" th:text="${venta.cliente != null ? venta.cliente.nombreRazon : 'N/A'}">Juan Pérez</td>
+                        <td class="py-3 text-olpesa-gray" th:text="${venta.producto != null ? venta.producto.nombre : 'N/A'}">Aceite de Palma</td>
+                        <td class="py-3 text-olpesa-gray" th:text="'S/ ' + ${#numbers.formatDecimal(venta.total, 1, 'COMMA', 2, 'POINT')}">S/ 1,250</td>
                         <td class="py-3">
-                            <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Completado</span>
+                            <span th:class="${venta.estado == T(pe.olpesa.venta.utils.EnumEstadoVenta).COMPLETADA ? 'px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs' : 'px-2 py-1 bg-olpesa-orange/10 text-olpesa-orange rounded-full text-xs'}"
+                                  th:text="${venta.estado == T(pe.olpesa.venta.utils.EnumEstadoVenta).COMPLETADA ? 'Completado' : 'Pendiente'}">Completado</span>
                         </td>
-                        <td class="py-3 text-olpesa-gray/60">Hoy, 10:30 AM</td>
+                        <td class="py-3 text-olpesa-gray/60" th:text="${#temporals.format(venta.fechaEmitido, 'dd/MM/yyyy HH:mm')}">Hoy, 10:30 AM</td>
                     </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
-                        <td class="py-3 text-olpesa-gray">#002</td>
-                        <td class="py-3 text-olpesa-gray">María García</td>
-                        <td class="py-3 text-olpesa-gray">Palmiste</td>
-                        <td class="py-3 text-olpesa-gray">S/ 850</td>
-                        <td class="py-3">
-                            <span class="px-2 py-1 bg-olpesa-orange/10 text-olpesa-orange rounded-full text-xs">Pendiente</span>
+                    <!-- Filas de respaldo en caso de que no haya ventas -->
+                    <tr th:if="${ultimasVentas == null or ultimasVentas.isEmpty()}" class="border-b border-gray-100">
+                        <td colspan="6" class="py-6 text-center text-olpesa-gray/60">
+                            <div class="flex flex-col items-center space-y-2">
+                                <svg class="w-12 h-12 text-olpesa-gray/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <p>No hay transacciones recientes</p>
+                                <a href="/ventas" class="text-olpesa-green hover:text-olpesa-dark-green text-sm font-medium">Crear primera venta</a>
+                            </div>
                         </td>
-                        <td class="py-3 text-olpesa-gray/60">Hoy, 09:15 AM</td>
-                    </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50/50">
-                        <td class="py-3 text-olpesa-gray">#003</td>
-                        <td class="py-3 text-olpesa-gray">Carlos Ruiz</td>
-                        <td class="py-3 text-olpesa-gray">Aceite Crudo</td>
-                        <td class="py-3 text-olpesa-gray">S/ 2,100</td>
-                        <td class="py-3">
-                            <span class="px-2 py-1 bg-olpesa-green/10 text-olpesa-green rounded-full text-xs">Completado</span>
-                        </td>
-                        <td class="py-3 text-olpesa-gray/60">Ayer, 04:45 PM</td>
                     </tr>
                 </tbody>
             </table>
@@ -239,6 +235,706 @@
                 });
             }
         });
+
+        // Variables globales para almacenar datos de ventas
+        let clientesDisponibles = [];
+        let productosDisponibles = [];
+
+        // Cargar datos al iniciar la página para las acciones rápidas
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarDatosParaVentas();
+        });
+
+        function cargarDatosParaVentas() {
+            // Cargar clientes para el modal de ventas
+            fetch('/api/ventas/clientes')
+                .then(response => response.json())
+                .then(data => {
+                    clientesDisponibles = data;
+                })
+                .catch(error => console.error('Error cargando clientes:', error));
+
+            // Cargar productos para el modal de ventas
+            fetch('/api/ventas/productos')
+                .then(response => response.json())
+                .then(data => {
+                    productosDisponibles = data.filter(p => p.estado && p.stockActual > 0);
+                })
+                .catch(error => console.error('Error cargando productos:', error));
+        }
+
+        // Función para abrir modal de cliente desde el dashboard
+        function abrirModalCliente() {
+            Swal.fire({
+                title: 'Crear Nuevo Cliente',
+                html: `
+                    <form id="crearClienteForm" class="text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Documento</label>
+                                <select id="tipoDocumento" name="tipoDocumento" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" required>
+                                    <option value="">Seleccionar tipo...</option>
+                                    <option value="DNI">DNI</option>
+                                    <option value="RUC">RUC</option>
+                                    <option value="CARNET_EXTRANJERIA">Carné de Extranjería</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Número de Documento</label>
+                                <input type="text" id="numeroDocumento" name="numeroDocumento" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       pattern="[0-9]{8,11}" title="Debe tener entre 8 y 11 dígitos numéricos" required>
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre / Razón Social</label>
+                                <input type="text" id="nombreRazon" name="nombreRazon" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       required>
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
+                                <input type="text" id="direccion" name="direccion" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       minlength="5" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" name="email" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent" 
+                                       pattern="[0-9]{9}" title="Debe tener exactamente 9 dígitos" required>
+                            </div>
+                        </div>
+                    </form>
+                `,
+                width: '800px',
+                showCancelButton: true,
+                confirmButtonText: 'Crear Cliente',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2',
+                    htmlContainer: 'text-left'
+                },
+                preConfirm: () => {
+                    const form = document.getElementById('crearClienteForm');
+                    const formData = new FormData(form);
+                    
+                    // Validar campos requeridos
+                    const tipoDocumento = formData.get('tipoDocumento');
+                    const numeroDocumento = formData.get('numeroDocumento');
+                    const nombreRazon = formData.get('nombreRazon');
+                    const direccion = formData.get('direccion');
+                    const email = formData.get('email');
+                    const telefono = formData.get('telefono');
+                    
+                    if (!tipoDocumento || !numeroDocumento || !nombreRazon || !direccion || !email || !telefono) {
+                        Swal.showValidationMessage('Todos los campos son requeridos');
+                        return false;
+                    }
+                    
+                    // Validar formato de documento
+                    if (!/^[0-9]{8,11}$/.test(numeroDocumento)) {
+                        Swal.showValidationMessage('El número de documento debe tener entre 8 y 11 dígitos');
+                        return false;
+                    }
+                    
+                    // Validar formato de teléfono
+                    if (!/^[0-9]{9}$/.test(telefono)) {
+                        Swal.showValidationMessage('El teléfono debe tener exactamente 9 dígitos');
+                        return false;
+                    }
+                    
+                    // Validar email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        Swal.showValidationMessage('El email debe tener un formato válido');
+                        return false;
+                    }
+                    
+                    return {
+                        tipoDocumento: tipoDocumento,
+                        numeroDocumento: numeroDocumento,
+                        nombreRazon: nombreRazon,
+                        direccion: direccion,
+                        email: email,
+                        telefono: telefono
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mostrar loading
+                    Swal.fire({
+                        title: 'Creando cliente...',
+                        text: 'Por favor espera',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Enviar datos al servidor
+                    fetch('/api/clientes', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            return response.text().then(text => {
+                                throw new Error(text);
+                            });
+                        }
+                    })
+                    .then(clienteCreado => {
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: 'Cliente creado correctamente',
+                            icon: 'success',
+                            confirmButtonColor: '#4CAF50',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        }).then(() => {
+                            // Opcional: recargar datos o actualizar estadísticas
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message || 'Ocurrió un error al crear el cliente',
+                            icon: 'error',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        // Función para abrir modal de producto desde el dashboard
+        function abrirModalProducto() {
+            Swal.fire({
+                title: 'Crear Nuevo Producto',
+                html: `
+                    <form id="crearProductoForm" class="text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                                <input type="text" name="sku" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Ejemplo: PROD001">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Código de Barras *</label>
+                                <input type="text" name="codigoBarras" required pattern="[0-9]+"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Solo números">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Producto *</label>
+                                <input type="text" name="nombre" required maxlength="100"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Nombre del producto">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Descripción *</label>
+                                <textarea name="descripcion" required maxlength="500" rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="Descripción del producto"></textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Precio Unitario *</label>
+                                <input type="number" name="precioUnitario" required step="0.01" min="0"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="0.00">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Inicial *</label>
+                                <input type="number" name="stockActual" required step="0.01" min="0"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                    placeholder="0.00">
+                            </div>
+                            
+                            <div class="mb-4 md:col-span-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="afectoImpuesto" class="rounded mr-2">
+                                    <span class="text-sm font-medium text-gray-700">Afecto a Impuesto (IGV)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                `,
+                width: '800px',
+                showCancelButton: true,
+                confirmButtonText: 'Crear Producto',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2',
+                    htmlContainer: 'text-left'
+                },
+                preConfirm: () => {
+                    const form = document.getElementById('crearProductoForm');
+                    const formData = new FormData(form);
+                    
+                    const sku = formData.get('sku');
+                    const codigoBarras = formData.get('codigoBarras');
+                    const nombre = formData.get('nombre');
+                    const descripcion = formData.get('descripcion');
+                    const precioUnitario = formData.get('precioUnitario');
+                    const stockActual = formData.get('stockActual');
+                    
+                    if (!sku || !codigoBarras || !nombre || !descripcion || !precioUnitario || !stockActual) {
+                        Swal.showValidationMessage('Todos los campos marcados con * son requeridos');
+                        return false;
+                    }
+                    
+                    if (!/^[0-9]+$/.test(codigoBarras)) {
+                        Swal.showValidationMessage('El código de barras debe contener solo números');
+                        return false;
+                    }
+                    
+                    if (parseFloat(precioUnitario) <= 0) {
+                        Swal.showValidationMessage('El precio debe ser mayor a 0');
+                        return false;
+                    }
+                    
+                    if (parseFloat(stockActual) < 0) {
+                        Swal.showValidationMessage('El stock no puede ser negativo');
+                        return false;
+                    }
+                    
+                    return {
+                        sku: sku,
+                        codigoBarras: codigoBarras,
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        precioUnitario: parseFloat(precioUnitario),
+                        stockActual: parseFloat(stockActual),
+                        afectoImpuesto: formData.get('afectoImpuesto') === 'on'
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Creando producto...',
+                        text: 'Por favor espere',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch('/api/productos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            return response.text().then(text => { throw new Error(text); });
+                        }
+                    })
+                    .then(productoCreado => {
+                        Swal.fire({
+                            title: '¡Producto creado!',
+                            text: 'El producto ha sido creado exitosamente',
+                            icon: 'success',
+                            confirmButtonColor: '#4CAF50',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message || 'No se pudo crear el producto',
+                            icon: 'error',
+                            confirmButtonColor: '#d33',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg px-6 py-2'
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        // Función para abrir modal de venta desde el dashboard
+        function abrirModalVenta() {
+            // Obtener datos del usuario desde el botón
+            const button = event.target.closest('button');
+            const usuarioId = button.dataset.usuarioId;
+            const usuarioNombre = button.dataset.usuarioNombre;
+            
+            Swal.fire({
+                title: 'Nueva Venta',
+                html: `
+                    <form id="nuevaVentaForm" class="text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="mb-4">
+                                <label for="clienteId" class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
+                                <select id="clienteId" name="clienteId" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                                    <option value="">Seleccionar cliente...</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Vendedor</label>
+                                <div class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                                    <span id="nombreVendedor">Usuario Logueado</span>
+                                    <input type="hidden" id="usuarioId" name="usuarioId" value="">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="productoId" class="block text-sm font-medium text-gray-700 mb-2">Producto</label>
+                                <select id="productoId" name="productoId" required onchange="actualizarPrecioProductoDashboard()"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                                    <option value="">Seleccionar producto...</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="cantidad" class="block text-sm font-medium text-gray-700 mb-2">Cantidad</label>
+                                <input type="number" id="cantidad" name="cantidad" min="1" required onchange="calcularTotalesDashboard()"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                                <small id="stockDisponible" class="text-gray-500"></small>
+                            </div>
+                            <div class="mb-4">
+                                <label for="tipoComprobante" class="block text-sm font-medium text-gray-700 mb-2">Tipo Comprobante</label>
+                                <select id="tipoComprobante" name="tipoComprobante" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                                    <option value="BOLETA">Boleta</option>
+                                    <option value="FACTURA">Factura</option>
+                                    <option value="NOTA_CREDITO">Nota de Crédito</option>
+                                    <option value="NOTA_DEBITO">Nota de Débito</option>
+                                    <option value="TICKET">Ticket</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="metodoPago" class="block text-sm font-medium text-gray-700 mb-2">Método Pago</label>
+                                <select id="metodoPago" name="metodoPago" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                                    <option value="EFECTIVO">Efectivo</option>
+                                    <option value="TARJETA_CREDITO">Tarjeta de Crédito</option>
+                                    <option value="TARJETA_DEBITO">Tarjeta de Débito</option>
+                                    <option value="TRANSFERENCIA_BANCARIA">Transferencia</option>
+                                    <option value="YAPE">Yape</option>
+                                    <option value="PLIN">Plin</option>
+                                    <option value="OTRO">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Resumen de totales -->
+                        <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                            <h4 class="font-medium mb-2">Resumen de Venta</h4>
+                            <div class="flex justify-between">
+                                <span>Precio Unitario:</span>
+                                <span id="precioUnitario">S/ 0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">S/ 0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>IGV (18%):</span>
+                                <span id="igv">S/ 0.00</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="flex justify-between font-bold">
+                                <span>Total:</span>
+                                <span id="total">S/ 0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 mt-4">
+                            <label for="montoPagado" class="block text-sm font-medium text-gray-700 mb-2">Monto Pagado</label>
+                            <input type="number" id="montoPagado" name="montoPagado" step="0.01" min="0" required onchange="calcularCambioDashboard()"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olpesa-green">
+                            <div id="cambio" class="text-sm text-gray-600 mt-1"></div>
+                        </div>
+                    </form>
+                `,
+                width: '900px',
+                showCancelButton: true,
+                confirmButtonText: 'Crear Venta',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2',
+                    cancelButton: 'rounded-lg px-6 py-2',
+                    htmlContainer: 'text-left'
+                },
+                didOpen: () => {
+                    cargarSelectsNuevaVentaDashboard(usuarioId, usuarioNombre);
+                },
+                preConfirm: () => {
+                    return validarFormularioVentaDashboard();
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    crearVentaDashboard(result.value);
+                }
+            });
+        }
+
+        function cargarSelectsNuevaVentaDashboard(usuarioId, usuarioNombre) {
+            const clienteSelect = document.getElementById('clienteId');
+            const productoSelect = document.getElementById('productoId');
+
+            // Limpiar selects
+            clienteSelect.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            productoSelect.innerHTML = '<option value="">Seleccionar producto...</option>';
+
+            // Establecer información del vendedor
+            document.getElementById('nombreVendedor').textContent = usuarioNombre;
+            document.getElementById('usuarioId').value = usuarioId;
+
+            // Cargar clientes
+            clientesDisponibles.forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.id;
+                option.textContent = `${cliente.nombreRazon} (${cliente.numeroDocumento})`;
+                clienteSelect.appendChild(option);
+            });
+
+            // Cargar productos
+            productosDisponibles.forEach(producto => {
+                const option = document.createElement('option');
+                option.value = producto.id;
+                option.textContent = `${producto.nombre} (Stock: ${producto.stockActual})`;
+                option.dataset.precio = producto.precioUnitario;
+                option.dataset.stock = producto.stockActual;
+                productoSelect.appendChild(option);
+            });
+        }
+
+        function actualizarPrecioProductoDashboard() {
+            const productoSelect = document.getElementById('productoId');
+            const cantidadInput = document.getElementById('cantidad');
+            const stockSpan = document.getElementById('stockDisponible');
+            const precioSpan = document.getElementById('precioUnitario');
+
+            if (productoSelect.value) {
+                const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+                const precio = parseFloat(selectedOption.dataset.precio);
+                const stock = parseInt(selectedOption.dataset.stock);
+
+                precioSpan.textContent = `S/ ${precio.toFixed(2)}`;
+                stockSpan.textContent = `Stock disponible: ${stock}`;
+                cantidadInput.max = stock;
+                
+                calcularTotalesDashboard();
+            } else {
+                precioSpan.textContent = 'S/ 0.00';
+                stockSpan.textContent = '';
+                cantidadInput.max = '';
+            }
+        }
+
+        function calcularTotalesDashboard() {
+            const productoSelect = document.getElementById('productoId');
+            const cantidadInput = document.getElementById('cantidad');
+            const subtotalSpan = document.getElementById('subtotal');
+            const igvSpan = document.getElementById('igv');
+            const totalSpan = document.getElementById('total');
+
+            if (productoSelect.value && cantidadInput.value) {
+                const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+                const precio = parseFloat(selectedOption.dataset.precio);
+                const cantidad = parseInt(cantidadInput.value);
+
+                const subtotal = precio * cantidad;
+                const igv = subtotal * 0.18;
+                const total = subtotal + igv;
+
+                subtotalSpan.textContent = `S/ ${subtotal.toFixed(2)}`;
+                igvSpan.textContent = `S/ ${igv.toFixed(2)}`;
+                totalSpan.textContent = `S/ ${total.toFixed(2)}`;
+
+                // Auto-llenar monto pagado con el total
+                document.getElementById('montoPagado').value = total.toFixed(2);
+                calcularCambioDashboard();
+            } else {
+                subtotalSpan.textContent = 'S/ 0.00';
+                igvSpan.textContent = 'S/ 0.00';
+                totalSpan.textContent = 'S/ 0.00';
+                document.getElementById('montoPagado').value = '';
+                document.getElementById('cambio').textContent = '';
+            }
+        }
+
+        function calcularCambioDashboard() {
+            const totalSpan = document.getElementById('total');
+            const montoPagadoInput = document.getElementById('montoPagado');
+            const cambioDiv = document.getElementById('cambio');
+
+            if (totalSpan.textContent !== 'S/ 0.00' && montoPagadoInput.value) {
+                const total = parseFloat(totalSpan.textContent.replace('S/ ', ''));
+                const montoPagado = parseFloat(montoPagadoInput.value);
+                const cambio = montoPagado - total;
+
+                if (cambio >= 0) {
+                    cambioDiv.textContent = `Cambio: S/ ${cambio.toFixed(2)}`;
+                    cambioDiv.className = 'text-sm text-green-600 mt-1';
+                } else {
+                    cambioDiv.textContent = `Falta: S/ ${Math.abs(cambio).toFixed(2)}`;
+                    cambioDiv.className = 'text-sm text-red-600 mt-1';
+                }
+            } else {
+                cambioDiv.textContent = '';
+            }
+        }
+
+        function validarFormularioVentaDashboard() {
+            const form = document.getElementById('nuevaVentaForm');
+            const formData = new FormData(form);
+            
+            // Validar campos requeridos
+            const campos = ['clienteId', 'usuarioId', 'productoId', 'cantidad', 'tipoComprobante', 'metodoPago', 'montoPagado'];
+            for (let campo of campos) {
+                if (!formData.get(campo)) {
+                    Swal.showValidationMessage(`Por favor complete el campo ${campo.replace('Id', '').replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+                    return false;
+                }
+            }
+
+            // Validar cantidad vs stock
+            const productoSelect = document.getElementById('productoId');
+            const cantidad = parseInt(formData.get('cantidad'));
+            const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+            const stock = parseInt(selectedOption.dataset.stock);
+
+            if (cantidad > stock) {
+                Swal.showValidationMessage(`La cantidad no puede ser mayor al stock disponible (${stock})`);
+                return false;
+            }
+
+            // Validar monto pagado
+            const total = parseFloat(document.getElementById('total').textContent.replace('S/ ', ''));
+            const montoPagado = parseFloat(formData.get('montoPagado'));
+
+            if (montoPagado < total) {
+                Swal.showValidationMessage('El monto pagado no puede ser menor al total');
+                return false;
+            }
+
+            return {
+                clienteId: formData.get('clienteId'),
+                usuarioId: formData.get('usuarioId'),
+                productoId: formData.get('productoId'),
+                cantidad: formData.get('cantidad'),
+                tipoComprobante: formData.get('tipoComprobante'),
+                metodoPago: formData.get('metodoPago'),
+                montoPagado: formData.get('montoPagado')
+            };
+        }
+
+        function crearVentaDashboard(ventaData) {
+            // Mostrar loading
+            Swal.fire({
+                title: 'Procesando...',
+                text: 'Creando la venta',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch('/api/ventas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ventaData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonColor: '#4CAF50',
+                        customClass: {
+                            confirmButton: 'rounded-lg px-6 py-2'
+                        }
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            confirmButton: 'rounded-lg px-6 py-2'
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al crear la venta',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    customClass: {
+                        confirmButton: 'rounded-lg px-6 py-2'
+                    }
+                });
+            });
+        }
     </script>
 </div>
 
