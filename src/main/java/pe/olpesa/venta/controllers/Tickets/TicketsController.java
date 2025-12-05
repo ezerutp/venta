@@ -16,6 +16,7 @@ import pe.olpesa.venta.services.IncidenciaService;
 import pe.olpesa.venta.services.ProductoService;
 import pe.olpesa.venta.services.UsuarioService;
 import pe.olpesa.venta.services.VentaService;
+import pe.olpesa.venta.utils.EnumEstadoIncidencia;
 
 @Controller
 @RequestMapping("/tickets")
@@ -55,6 +56,43 @@ public class TicketsController {
                 .toList();
         }
 
+        int totalIncidencias = incidenciaService.listarTodas().size();
+        int incidenciasAbiertas = (int) incidenciaService.listarTodas().stream()
+            .filter(incidencia -> incidencia.getEstado() == EnumEstadoIncidencia.ABIERTO)
+            .count();
+
+        int incidenciasResueltas = (int) incidenciaService.listarTodas().stream()
+            .filter(incidencia -> incidencia.getEstado() == EnumEstadoIncidencia.RESUELTO)
+            .count();
+
+        int incidenciasCanceladas = (int) incidenciaService.listarTodas().stream()
+            .filter(incidencia -> incidencia.getEstado() == EnumEstadoIncidencia.CANCELADO)
+            .count();
+
+        int incidenciasCriticas = (int) incidenciaService.listarTodas().stream()
+            .filter(incidencia -> incidencia.getPrioridad() == pe.olpesa.venta.utils.EnumPrioridad.URGENTE)
+            .count();
+
+        int incidenciasAltas = (int) incidenciaService.listarTodas().stream()   
+            .filter(incidencia -> incidencia.getPrioridad() == pe.olpesa.venta.utils.EnumPrioridad.ALTA)
+            .count();
+
+        int incidenciasMedias = (int) incidenciaService.listarTodas().stream()
+                .filter(incidencia -> incidencia.getPrioridad() == pe.olpesa.venta.utils.EnumPrioridad.MEDIA)
+                .count();
+        
+        int incidenciasBajas = (int) incidenciaService.listarTodas().stream()
+            .filter(incidencia -> incidencia.getPrioridad() == pe.olpesa.venta.utils.EnumPrioridad.BAJA)
+            .count();
+        
+        model.addAttribute("totalIncidencias", totalIncidencias);
+        model.addAttribute("incidenciasAbiertas", incidenciasAbiertas);
+        model.addAttribute("incidenciasResueltas", incidenciasResueltas);
+        model.addAttribute("incidenciasCanceladas", incidenciasCanceladas);
+        model.addAttribute("incidenciasCriticas", incidenciasCriticas);
+        model.addAttribute("incidenciasAltas", incidenciasAltas);
+        model.addAttribute("incidenciasMedias", incidenciasMedias);
+        model.addAttribute("incidenciasBajas", incidenciasBajas);
         model.addAttribute("ticketsAsignados", ticketsAsignados);
         
         return "tickets/abiertos";
