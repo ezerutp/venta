@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{fragments/base :: layout('OLPESA - Crear Ticket', ~{::main})}">
+
+<!-- Contenido específico de Crear Ticket -->
+<main class="flex-1 overflow-y-auto">
+    <div class="p-8 m-4">
+        <div class="stat-card rounded-xl p-8">
+            <form id="crearTicketForm" class="space-y-6">
+                <!-- Sección: Información General -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h3 class="text-lg font-semibold text-olpesa-gray mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-olpesa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Información General
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Título del Ticket -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Título del Ticket *</label>
+                            <input type="text" name="titulo" id="titulo" required maxlength="150"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="Ej: Problema con entrega de producto">
+                        </div>
+
+                        <!-- Tipo de Incidencia -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Incidencia *</label>
+                            <select name="tipoIncidencia" id="tipoIncidencia" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Seleccione un tipo</option>
+                                <option value="VENTA">Problema con Venta</option>
+                                <option value="PRODUCTO">Problema con Producto</option>
+                                <option value="ENTREGA">Problema con Entrega</option>
+                                <option value="FACTURACION">Problema de Facturación</option>
+                                <option value="DEVOLUCION">Solicitud de Devolución</option>
+                                <option value="CALIDAD">Problema de Calidad</option>
+                                <option value="ATENCION">Queja de Atención</option>
+                                <option value="TECNICO">Problema Técnico</option>
+                                <option value="OTRO">Otro</option>
+                            </select>
+                        </div>
+
+                        <!-- Prioridad -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prioridad *</label>
+                            <select name="prioridad" id="prioridad" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Seleccione prioridad</option>
+                                <option value="BAJA">Baja - Puede esperar</option>
+                                <option value="MEDIA">Media - Atención normal</option>
+                                <option value="ALTA">Alta - Requiere atención pronta</option>
+                                <option value="URGENTE">Urgente - Atención inmediata</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Cliente y Venta Relacionada -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h3 class="text-lg font-semibold text-olpesa-gray mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-olpesa-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Cliente y Venta Relacionada
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Cliente -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
+                            <select name="clienteId" id="clienteId" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Seleccione un cliente</option>
+                                <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombreRazon}">Cliente</option>
+                            </select>
+                        </div>
+
+                        <!-- Venta Relacionada (Opcional) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Venta Relacionada (Opcional)</label>
+                            <select name="ventaId" id="ventaId"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Sin venta relacionada</option>
+                                <option th:each="venta : ${ventas}" th:value="${venta.id}" th:text="'Venta #' + ${venta.id} + ' - ' + ${venta.fechaEmitido} + ' - ' + ${venta.cliente.nombreRazon}">Venta</option>
+                            </select>
+                        </div>
+
+                        <!-- Producto Relacionado (Opcional) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Producto Relacionado (Opcional)</label>
+                            <select name="productoId" id="productoId"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Sin producto específico</option>
+                                <option th:each="producto : ${productos}" th:value="${producto.id}" th:text="${producto.nombre}">Producto</option>
+                            </select>
+                        </div>
+
+                        <!-- Número de Documento/Factura -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Número de Documento/Factura</label>
+                            <input type="text" name="numeroDocumento" id="numeroDocumento" maxlength="50"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="Ej: FAC-001-00001234">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Descripción del Problema -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h3 class="text-lg font-semibold text-olpesa-gray mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        Descripción del Problema
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Motivo de la Incidencia -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Motivo de la Incidencia *</label>
+                            <textarea name="motivo" id="motivo" required rows="4" maxlength="1000"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent resize-none"
+                                placeholder="Describa detalladamente el motivo de la incidencia..."></textarea>
+                            <p class="text-xs text-gray-500 mt-1">Máximo 1000 caracteres</p>
+                        </div>
+
+                        <!-- Impacto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Impacto en el Cliente/Negocio</label>
+                            <select name="impacto" id="impacto"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Seleccione el impacto</option>
+                                <option value="MINIMO">Mínimo - No afecta operaciones</option>
+                                <option value="MODERADO">Moderado - Afecta parcialmente</option>
+                                <option value="SIGNIFICATIVO">Significativo - Impacto considerable</option>
+                                <option value="CRITICO">Crítico - Paraliza operaciones</option>
+                            </select>
+                        </div>
+
+                        <!-- Acciones Tomadas -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Acciones Tomadas Previamente</label>
+                            <textarea name="accionesTomadas" id="accionesTomadas" rows="3" maxlength="500"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent resize-none"
+                                placeholder="¿Se han realizado acciones previas para resolver el problema?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Datos de Contacto -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h3 class="text-lg font-semibold text-olpesa-gray mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Datos de Contacto
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Nombre de Contacto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Contacto *</label>
+                            <input type="text" name="nombreContacto" id="nombreContacto" required maxlength="100"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="Nombre completo">
+                        </div>
+
+                        <!-- Teléfono de Contacto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono *</label>
+                            <input type="tel" name="telefonoContacto" id="telefonoContacto" required maxlength="20"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="Ej: 999 999 999">
+                        </div>
+
+                        <!-- Email de Contacto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
+                            <input type="email" name="emailContacto" id="emailContacto" maxlength="100"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Información Adicional -->
+                <div class="pb-6">
+                    <h3 class="text-lg font-semibold text-olpesa-gray mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Información Adicional
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Fecha del Incidente -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Fecha del Incidente</label>
+                            <input type="date" name="fechaIncidente" id="fechaIncidente"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                        </div>
+
+                        <!-- Canal de Recepción -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Canal de Recepción</label>
+                            <select name="canalRecepcion" id="canalRecepcion"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Seleccione canal</option>
+                                <option value="TELEFONO">Teléfono</option>
+                                <option value="EMAIL">Correo Electrónico</option>
+                                <option value="PRESENCIAL">Presencial</option>
+                                <option value="WHATSAPP">WhatsApp</option>
+                                <option value="REDES_SOCIALES">Redes Sociales</option>
+                                <option value="WEB">Formulario Web</option>
+                            </select>
+                        </div>
+
+                        <!-- Monto Involucrado -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Monto Involucrado (S/)</label>
+                            <input type="number" name="montoInvolucrado" id="montoInvolucrado" step="0.01" min="0"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent"
+                                placeholder="0.00">
+                        </div>
+
+                        <!-- Asignar a - Solo visible para admin -->
+                        <div th:if="${esAdmin}">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a (Usuario)</label>
+                            <select name="asignadoA" id="asignadoA"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent">
+                                <option value="">Sin asignar</option>
+                                <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}">Usuario</option>
+                            </select>
+                        </div>
+                        <!-- Campo oculto para usuarios normales -->
+                        <input th:unless="${esAdmin}" type="hidden" name="asignadoA" id="asignadoA" th:value="${usuarioActual.id}">
+
+                        <!-- Notas Adicionales -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notas Adicionales</label>
+                            <textarea name="notasAdicionales" id="notasAdicionales" rows="3" maxlength="500"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olpesa-green focus:border-transparent resize-none"
+                                placeholder="Cualquier información adicional relevante..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <button type="button" onclick="limpiarFormulario()"
+                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Limpiar
+                    </button>
+                    <button type="button" onclick="guardarBorrador()"
+                        class="px-6 py-3 bg-olpesa-orange text-white rounded-lg hover:opacity-90 transition-opacity flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                        </svg>
+                        Guardar Borrador
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-3 bg-olpesa-green text-white rounded-lg hover:bg-olpesa-dark-green transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Crear Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts específicos de crear ticket -->
+    <script>
+        // Establecer fecha máxima como hoy
+        const fechaIncidenteInput = document.getElementById('fechaIncidente');
+        if (fechaIncidenteInput) {
+            fechaIncidenteInput.max = new Date().toISOString().split('T')[0];
+        }
+
+        // Enviar formulario
+        document.getElementById('crearTicketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const formData = new FormData(this);
+            const datos = {};
+            formData.forEach((value, key) => {
+                if (value) datos[key] = value;
+            });
+
+            console.log('Datos a enviar:', datos);
+
+            Swal.fire({
+                title: 'Creando ticket...',
+                text: 'Por favor espere',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch('/api/tickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+            })
+            .then(ticketCreado => {
+                // Limpiar borrador al crear exitosamente
+                localStorage.removeItem('ticketBorrador');
+                
+                Swal.fire({
+                    title: '¡Ticket creado!',
+                    html: `
+                        <p>El ticket ha sido creado exitosamente.</p>
+                        <p class="mt-2 font-semibold">Número de Ticket: #${ticketCreado.id || 'N/A'}</p>
+                    `,
+                    icon: 'success',
+                    confirmButtonColor: '#4CAF50',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg px-6 py-2'
+                    }
+                }).then(() => {
+                    window.location.href = '/tickets/abiertos';
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'No se pudo crear el ticket',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg px-6 py-2'
+                    }
+                });
+            });
+            
+            return false;
+        });
+
+        function limpiarFormulario() {
+            Swal.fire({
+                title: '¿Limpiar formulario?',
+                text: 'Se perderán todos los datos ingresados',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#4CAF50',
+                confirmButtonText: 'Sí, limpiar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('crearTicketForm').reset();
+                    Swal.fire({
+                        title: 'Formulario limpiado',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function guardarBorrador() {
+            const formData = new FormData(document.getElementById('crearTicketForm'));
+            const datos = {};
+            formData.forEach((value, key) => {
+                if (value) datos[key] = value;
+            });
+            
+            // Guardar en localStorage
+            localStorage.setItem('ticketBorrador', JSON.stringify(datos));
+            
+            Swal.fire({
+                title: '¡Borrador guardado!',
+                text: 'Puede continuar más tarde',
+                icon: 'success',
+                confirmButtonColor: '#4CAF50',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        // Cargar borrador si existe
+        document.addEventListener('DOMContentLoaded', function() {
+            const borrador = localStorage.getItem('ticketBorrador');
+            if (borrador) {
+                Swal.fire({
+                    title: 'Borrador encontrado',
+                    text: '¿Desea recuperar el borrador guardado?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#4CAF50',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, recuperar',
+                    cancelButtonText: 'No, empezar nuevo'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const datos = JSON.parse(borrador);
+                        Object.keys(datos).forEach(key => {
+                            const campo = document.getElementById(key);
+                            if (campo) {
+                                campo.value = datos[key];
+                            }
+                        });
+                        Swal.fire({
+                            title: 'Borrador recuperado',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        localStorage.removeItem('ticketBorrador');
+                    }
+                });
+            }
+        });
+    </script>
+</main>
+
+</html>

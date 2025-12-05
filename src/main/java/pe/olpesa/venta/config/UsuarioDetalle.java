@@ -54,4 +54,8 @@ public class UsuarioDetalle implements UserDetails {
         return usuario.getEmail();
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
 }

@@ -44,12 +44,12 @@
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
         <!-- Contenido principal -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-auto">
             <!-- Header -->
             <div th:replace="~{fragments/header :: header}"></div>
 
             <!-- Contenido dinámico -->
-            <main th:replace="${content}">
+            <main class="flex-1 overflow-auto" th:replace="${content}">
                 <!-- El contenido específico de cada página se insertará aquí -->
             </main>
         </div>

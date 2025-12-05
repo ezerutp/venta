@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{fragments/base :: layout('OLPESA - Tickets Abiertos', ~{::main})}">
+
+<!-- Contenido específico de Tickets Abiertos -->
+<main>
+    <div class="flex-1 overflow-auto p-8 m-4">
+       
+        <!-- Tabla de Tickets Asignados -->
+        <div id="seccionAsignados" class="stat-card rounded-xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-olpesa-gray">Tickets Asignados</h3>
+                <div class="flex space-x-2">
+                    <select id="filtroEstadoAsignados" onchange="filtrarTabla('asignados')" class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option value="">Todos los estados</option>
+                        <option value="ABIERTO">Abierto</option>
+                        <option value="EN_PROCESO">En Proceso</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                    </select>
+                    <select id="filtroPrioridadAsignados" onchange="filtrarTabla('asignados')" class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                        <option value="">Todas las prioridades</option>
+                        <option value="CRITICA">Crítica</option>
+                        <option value="ALTA">Alta</option>
+                        <option value="MEDIA">Media</option>
+                        <option value="BAJA">Baja</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full" id="tablaAsignados">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 text-gray-600 font-medium">ID</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Título</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Tipo</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Prioridad</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Estado</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Cliente</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Asignado a</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Fecha Creación</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Fecha Actualización</th>
+                            <th class="text-left py-3 text-gray-600 font-medium">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(ticketsAsignados)}" class="border-b border-gray-100">
+                            <td colspan="8" class="py-8 text-center text-gray-500">
+                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                </svg>
+                                <p class="text-lg font-medium">No tienes tickets asignados</p>
+                                <p class="text-sm">¡Excelente! No hay incidencias pendientes asignadas a ti.</p>
+                            </td>
+                        </tr>
+                        <tr th:each="ticket : ${ticketsAsignados}" class="border-b border-gray-100 hover:bg-gray-50/50"
+                            th:data-estado="${ticket.estado}" th:data-prioridad="${ticket.prioridad}">
+                            <td class="py-3">
+                                <span class="text-olpesa-green font-mono font-bold" th:text="'#' + ${ticket.id}">0</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="max-w-xs">
+                                    <p class="font-medium text-olpesa-gray truncate" th:text="${ticket.titulo}">Título del ticket</p>
+                                    <p class="text-sm text-gray-500 truncate" th:text="${ticket.motivo}">Descripción breve</p>
+                                </div>
+                            </td>
+                            <td class="py-3">
+                                <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-700" 
+                                    th:text="${ticket.tipoIncidencia?.toString()?.replace('_', ' ')}">Tipo</span>
+                            </td>
+                            <td class="py-3">
+                                <span class="px-2 py-1 text-xs rounded-full"
+                                    th:classappend="${ticket.prioridad?.name() == 'CRITICA' ? 'bg-red-100 text-red-700' : 
+                                                     (ticket.prioridad?.name() == 'ALTA' ? 'bg-orange-100 text-orange-700' : 
+                                                     (ticket.prioridad?.name() == 'MEDIA' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'))}"
+                                    th:text="${ticket.prioridad}">Prioridad</span>
+                            </td>
+                            <td class="py-3">
+                                <span class="px-2 py-1 text-xs rounded-full"
+                                    th:classappend="${ticket.estado?.name() == 'ABIERTO' ? 'bg-blue-100 text-blue-700' : 
+                                                     (ticket.estado?.name() == 'EN_PROCESO' ? 'bg-yellow-100 text-yellow-700' : 
+                                                     (ticket.estado?.name() == 'PENDIENTE' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'))}"
+                                    th:text="${ticket.estado?.toString()?.replace('_', ' ')}">Estado</span>
+                            </td>
+                            <td class="py-3">
+                                <span th:text="${ticket.cliente != null ? ticket.cliente.nombreRazon : 'Sin cliente'}" class="text-gray-700">Cliente</span>
+                            </td>
+                            <td class="py-3">
+                                <span th:text="${ticket.asignadoA != null ? ticket.asignadoA.nombre + ' ' + ticket.asignadoA.apellido : 'Sin asignar'}" class="text-gray-700">Asignado a</span>
+                            </td>
+                            <td class="py-3">
+                                <span class="text-gray-500 text-sm" th:text="${#temporals.format(ticket.fechaCreacion, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                            </td>
+                            <td class="py-3">
+                                <span class="text-gray-500 text-sm" th:text="${#temporals.format(ticket.fechaActualizacion, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="flex space-x-2">
+                                    <button th:onclick="'verDetalle(' + ${ticket.id} + ')'" 
+                                        class="text-blue-500 hover:text-blue-700" title="Ver detalle">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </button>
+                                    <button th:onclick="'cambiarEstado(' + ${ticket.id} + ')'" 
+                                        class="text-olpesa-green hover:text-olpesa-dark-green" title="Cambiar estado">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts específicos de la página -->
+    <script th:inline="javascript">
+    // Cambiar entre tabs
+    function mostrarTab(tab) {
+        const tabAsignados = document.getElementById('tabAsignados');
+        const tabCreados = document.getElementById('tabCreados');
+        const seccionAsignados = document.getElementById('seccionAsignados');
+        const seccionCreados = document.getElementById('seccionCreados');
+
+        if (tab === 'asignados') {
+            tabAsignados.classList.add('border-olpesa-green', 'text-olpesa-green');
+            tabAsignados.classList.remove('border-transparent', 'text-gray-500');
+            tabCreados.classList.remove('border-olpesa-green', 'text-olpesa-green');
+            tabCreados.classList.add('border-transparent', 'text-gray-500');
+            seccionAsignados.classList.remove('hidden');
+            seccionCreados.classList.add('hidden');
+        } else {
+            tabCreados.classList.add('border-olpesa-green', 'text-olpesa-green');
+            tabCreados.classList.remove('border-transparent', 'text-gray-500');
+            tabAsignados.classList.remove('border-olpesa-green', 'text-olpesa-green');
+            tabAsignados.classList.add('border-transparent', 'text-gray-500');
+            seccionCreados.classList.remove('hidden');
+            seccionAsignados.classList.add('hidden');
+        }
+    }
+
+    // Filtrar tablas
+    function filtrarTabla(tipo) {
+        const estadoSelect = document.getElementById(`filtroEstado${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+        const prioridadSelect = document.getElementById(`filtroPrioridad${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+        const tabla = document.getElementById(`tabla${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+        
+        const estadoFiltro = estadoSelect.value;
+        const prioridadFiltro = prioridadSelect.value;
+        
+        const filas = tabla.querySelectorAll('tbody tr[data-estado]');
+        
+        filas.forEach(fila => {
+            const estado = fila.getAttribute('data-estado');
+            const prioridad = fila.getAttribute('data-prioridad');
+            
+            let mostrar = true;
+            
+            if (estadoFiltro && estado !== estadoFiltro) {
+                mostrar = false;
+            }
+            if (prioridadFiltro && prioridad !== prioridadFiltro) {
+                mostrar = false;
+            }
+            
+            fila.style.display = mostrar ? '' : 'none';
+        });
+    }
+
+    // Ver detalle de un ticket
+    function verDetalle(id) {
+        Swal.fire({
+            title: 'Cargando...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        fetch(`/api/tickets/${id}`)
+            .then(response => response.json())
+            .then(ticket => {
+                Swal.fire({
+                    title: `Ticket #${ticket.id}`,
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-2"><strong>Título:</strong> ${ticket.titulo}</p>
+                            <p class="mb-2"><strong>Tipo:</strong> ${ticket.tipoIncidencia?.replace('_', ' ') || 'N/A'}</p>
+                            <p class="mb-2"><strong>Prioridad:</strong> ${ticket.prioridad || 'N/A'}</p>
+                            <p class="mb-2"><strong>Estado:</strong> ${ticket.estado?.replace('_', ' ') || 'N/A'}</p>
+                            <p class="mb-2"><strong>Impacto:</strong> ${ticket.impacto || 'N/A'}</p>
+                            <hr class="my-3">
+                            <p class="mb-2"><strong>Cliente:</strong> ${ticket.cliente?.nombreRazon || 'Sin cliente'}</p>
+                            <p class="mb-2"><strong>Producto:</strong> ${ticket.producto?.nombre || 'Sin producto'}</p>
+                            <hr class="my-3">
+                            <p class="mb-2"><strong>Motivo:</strong></p>
+                            <p class="text-sm text-gray-600 mb-2">${ticket.motivo || 'Sin descripción'}</p>
+                            <hr class="my-3">
+                            <p class="mb-2"><strong>Contacto:</strong> ${ticket.nombreContacto || 'N/A'} - ${ticket.telefonoContacto || 'N/A'}</p>
+                            <p class="mb-2"><strong>Creado por:</strong> ${ticket.creadoPor?.nombre || 'N/A'}</p>
+                            <p class="mb-2"><strong>Asignado a:</strong> ${ticket.asignadoA?.nombre || 'Sin asignar'}</p>
+                        </div>
+                    `,
+                    width: 600,
+                    confirmButtonColor: '#27AE60'
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'No se pudo cargar el detalle del ticket', 'error');
+            });
+    }
+
+    // Cambiar estado de un ticket
+    function cambiarEstado(id) {
+        Swal.fire({
+            title: 'Cambiar Estado',
+            input: 'select',
+            inputOptions: {
+                'ABIERTO': 'Abierto',
+                'EN_PROCESO': 'En Proceso',
+                'PENDIENTE': 'Pendiente',
+                'RESUELTO': 'Resuelto',
+                'CERRADO': 'Cerrado'
+            },
+            inputPlaceholder: 'Selecciona un estado',
+            showCancelButton: true,
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#27AE60',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar un estado';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/api/tickets/${id}/estado/${result.value}`, {
+                    method: 'PUT'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Estado actualizado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        throw new Error('Error al actualizar');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'No se pudo actualizar el estado', 'error');
+                });
+            }
+        });
+    }
+
+    // Editar ticket
+    function editarTicket(id) {
+        // Redirigir a la página de edición
+        window.location.href = `/tickets/editar/${id}`;
+    }
+
+    // Calcular estadísticas al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const ticketsAsignados = document.querySelectorAll('#tablaAsignados tbody tr[data-prioridad]');
+        let prioridadAlta = 0;
+        let enProceso = 0;
+
+        ticketsAsignados.forEach(row => {
+            const prioridad = row.getAttribute('data-prioridad');
+            const estado = row.getAttribute('data-estado');
+            
+            if (prioridad === 'ALTA' || prioridad === 'CRITICA') {
+                prioridadAlta++;
+            }
+            if (estado === 'EN_PROCESO') {
+                enProceso++;
+            }
+        });
+
+        document.getElementById('prioridadAlta').textContent = prioridadAlta;
+        document.getElementById('enProceso').textContent = enProceso;
+    });
+</script>
+</main>
+
+</html>
